@@ -5,7 +5,7 @@ Desarrollado con **Electron.js**, **Bootstrap**, y almacenamiento local.
 Como usa Bootstrap no lo consulta de forma local a tener en cuenta.
 usa internet pasa ejecutar lo anterior mencionado.
 
-![Preview](resources/themes/default/images/background00.jpg)
+![Preview](resources/themes/default/images/backgroundX.png)
 
 ---
 
