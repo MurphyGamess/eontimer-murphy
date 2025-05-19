@@ -27,6 +27,7 @@ usa internet pasa ejecutar lo anterior mencionado.
 ---
 
 ## 📂 Estructura del proyecto
+```
 eontimer-murphy/
 ├── config/
 ├── resources/
@@ -41,6 +42,7 @@ eontimer-murphy/
 ├── package.json
 ├── README.md
 └── .gitignore
+```
 ---
 
 ## 🚀 Instalación
