@@ -1,4 +1,4 @@
-# 🔥 Pyro Timer
+# 🔥 Timer-murphy RNG
 
 Temporizador tipo EonTimer para realizar RNG en juegos de Pokémon (GBA).  
 Desarrollado con **Electron.js**, **Bootstrap**, y almacenamiento local.
