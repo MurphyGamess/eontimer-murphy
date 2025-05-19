@@ -1,0 +1,14 @@
+# Ignorar dependencias
+node_modules/
+
+# Configuración local
+config/settings.json
+
+# Archivos temporales
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+*.log

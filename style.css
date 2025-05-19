@@ -1,0 +1,130 @@
+/* Contenedor del logo para posicionamiento */
+.logo-container {
+  position: absolute;
+  top: 0px; /* este valor se actualizará con JS */
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  text-align: center;
+  z-index: 20;
+  pointer-events: none;
+}
+
+
+
+/* Logo */
+#navbarLogo {
+  max-width: 200px !important;
+  height: 100px;
+  display: block;
+  position: relative; /* para que top funcione */
+  pointer-events: none;
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5));
+  margin: 0 auto;
+}
+
+/* Contenedor timer para que no suba */
+/* Deja espacio para el logo en el layout */
+.timers-container {
+  position: relative;
+  z-index: 10;
+  padding-top: 110px; /* espacio suficiente para logo de 100px */
+}
+
+    
+      body {
+        background-color: #121212;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .navbar {
+        background-color: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(5px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .navbar-brand {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      #navbarLogo {
+        height: 100px;
+        display: block;
+      }
+
+      #settingsButton {
+        border: none;
+        background: none;
+        color: #f8f9fa;
+        font-size: 1.5rem;
+        margin-left: auto;
+      }
+
+      #settingsButton i {
+        transition: transform 0.3s ease;
+      }
+
+      #settingsButton:hover i {
+        transform: rotate(90deg);
+      }
+
+      .container {
+        max-width: 600px;
+        margin-top: 2rem;
+        background: rgba(0, 0, 0, 0.65);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+      }
+
+      #mainTimer {
+        font-size: 4rem;
+        font-weight: bold;
+        color: #0dcaf0;
+      }
+
+      #subTimer {
+        font-size: 2rem;
+        color: #adb5bd;
+      }
+
+      #mostrarTiempoBtn {
+        font-size: 1.5rem;
+        margin-top: 1rem;
+        color: #f8f9fa;
+      }
+
+      .form-label {
+        color: #f8f9fa;
+        margin-top: 0.5rem;
+      }
+
+      .form-control,
+      .form-select {
+        background-color: #343a40;
+        border: 1px solid #495057;
+        color: #f8f9fa;
+      }
+
+      .form-control:disabled {
+        background-color: #444;
+        color: #aaa;
+      }
+
+      .btn-primary,
+      .btn-success {
+        width: 48%;
+      }
+
+      .modal-content {
+        background-color: #1f1f1f;
+        color: white;
+      }

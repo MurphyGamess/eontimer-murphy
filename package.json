@@ -1,0 +1,17 @@
+{
+  "name": "timer-murphy",
+  "version": "1.0.0",
+  "description": "Temporizador tipo EonTimer para RNG en juegos Pokémon",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^25.3.1"
+  },
+  "author": "MurphyGamess",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MurphyGamess/eontimer-murphy.git"
+  }
+}
