@@ -12,35 +12,39 @@
   </head>
   <body class="text-light">
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg px-4">
-      <div class="container-fluid">
-        <button id="settingsButton" title="Ajustes" data-bs-toggle="modal" data-bs-target="#settingsModal">
-          <i class="bi bi-gear-fill"></i>
-        </button>
-      </div>
+    <!-- Navbar minimal solo con botón de ajustes en la esquina superior derecha -->
+    <nav class="position-absolute top-0 end-0 p-3 z-3">
+      <button id="settingsButton" title="Ajustes" data-bs-toggle="modal" data-bs-target="#settingsModal"
+              class="btn btn-outline-light btn-sm rounded-circle">
+        <i class="bi bi-gear-fill"></i>
+      </button>
     </nav>
+
     <div class="logo-container text-center mb-0">
       <img src="" alt="Logo" id="navbarLogo" />
     </div>
     <!-- Main Content -->
     <div class="container">
 
-      <div class="text-center mb-4 py-4 px-3 rounded shadow" style="background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2);">
-        <h2 class="display-4 fw-bold text-light" id="mainTimer">5:000</h2>
-        <h5 class="text-info mb-3" id="subTimer">5:000</h5>
-        <!-- NUEVO: Info de frames objetivo y alcanzado -->
+      <!-- Timer Principal -->
+      <div class="text-center mb-4 py-3 px-3 rounded shadow"
+          style="background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2);">
+        <h2 class="display-5 fw-bold text-light mb-1" id="mainTimer">5:000</h2>
+        <h5 class="text-info mb-2" id="subTimer">5:000</h5>
         <div id="frameInfo" class="small text-warning mb-2"></div>
-
-        <button id="mostrarTiempoBtn" style="visibility: hidden;" class="btn btn-outline-warning btn-sm px-4 rounded-pill mt-3">
+        <!--
+        <button id="mostrarTiempoBtn"
+                style="visibility: hidden;"
+                class="btn btn-outline-warning btn-sm px-4 rounded-pill mt-2">
           Mostrar Tiempo
         </button>
+        -->
       </div>
 
-
+      <!-- Selección CPS -->
       <div class="mb-3">
         <label for="select-cps" class="form-label">Selecciona CPS</label>
-        <select id="select-cps" class="form-select">
+        <select id="select-cps" class="form-select form-select-sm">
           <option value="60">60 (¿Emulador?)</option>
           <option value="59.7275">GBA</option>
           <option value="59.8261">DS GBA</option>
@@ -55,26 +59,40 @@
         </select>
       </div>
 
-      <label for="input-cps" class="form-label">CPS Personalizado</label>
-      <input type="text" id="input-cps" class="form-control mb-3" value="60" disabled />
+      <div class="row g-2">
+        <div class="col-6">
+          <label for="input-cps" class="form-label">CPS Personalizado</label>
+          <input type="text" id="input-cps" class="form-control form-control-sm" value="60" disabled />
+        </div>
+        <div class="col-6">
+          <label for="calibration" class="form-label">Calibration</label>
+          <input type="number" id="calibration" class="form-control form-control-sm" value="0" />
+        </div>
+      </div>
 
-      <label for="calibration" class="form-label">Calibration</label>
-      <input type="number" id="calibration" class="form-control" value="0" />
+      <div class="row g-2 mt-2">
+        <div class="col-6">
+          <label for="preTimer" class="form-label">Pre-Timer</label>
+          <input type="number" id="preTimer" class="form-control form-control-sm" value="5000" />
+        </div>
+        <div class="col-6">
+          <label for="targetFrame" class="form-label">Target Frame</label>
+          <input type="number" id="targetFrame" class="form-control form-control-sm" value="0" />
+        </div>
+      </div>
 
-      <label for="preTimer" class="form-label">Pre-Timer</label>
-      <input type="number" id="preTimer" class="form-control" value="5000" />
+      <div class="mb-3 mt-2">
+        <label for="frameHit" class="form-label">Frame Hit</label>
+        <input type="number" id="frameHit" class="form-control form-control-sm" />
+      </div>
 
-      <label for="targetFrame" class="form-label">Target Frame</label>
-      <input type="number" id="targetFrame" class="form-control" value="0"/>
-
-      <label for="frameHit" class="form-label">Frame Hit</label>
-      <input type="number" id="frameHit" class="form-control mb-4" />
-
+      <!-- Botones -->
       <div class="d-flex justify-content-between">
-        <button id="updateButton" class="btn btn-primary">Update</button>
-        <button id="startButton" class="btn btn-success">Start</button>
+        <button id="updateButton" class="btn btn-primary w-50 me-1">Update</button>
+        <button id="startButton" class="btn btn-success w-50 ms-1">Start</button>
       </div>
     </div>
+
 
     <!-- Settings Modal -->
     <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
