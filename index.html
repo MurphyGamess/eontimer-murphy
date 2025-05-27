@@ -120,40 +120,48 @@
         <button id="startButton" class="btn btn-success w-50 ms-1">Start</button>
       </div>
 
-      <!-- Modo Entrenamiento -->
-      <div class="card bg-dark border-info mb-4">
-        <div class="card-header bg-info bg-opacity-25 d-flex justify-content-between align-items-center">
-          <h5 class="mb-0 text-info">Modo Entrenamiento</h5>
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="training-mode">
-          </div>
-        </div>
-        <div class="card-body" id="training-section" style="display: none;">
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="text-center">
-                <h6 class="text-light">Precisión</h6>
-                <div class="display-6 text-info mb-2" id="accuracy">0%</div>
-                <small class="text-muted" id="attempts">Intentos: 0</small>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="text-center">
-                <h6 class="text-light">Mejor Racha</h6>
-                <div class="display-6 text-warning mb-2" id="best-streak">0</div>
-                <small class="text-muted" id="current-streak">Racha actual: 0</small>
-              </div>
-            </div>
-          </div>
-          <div class="mt-3">
-            <h6 class="text-light mb-2">Últimos Intentos</h6>
-            <div class="progress" style="height: 25px;">
-              <div class="progress-bar bg-success" id="hits-bar" style="width: 0%" title="Aciertos"></div>
-              <div class="progress-bar bg-danger" id="misses-bar" style="width: 0%" title="Fallos"></div>
-            </div>
-          </div>
+<!-- Modo Entrenamiento -->
+<div class="card bg-dark border-info mb-4">
+  <div class="card-header bg-info bg-opacity-25 d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 text-info">Modo Entrenamiento</h5>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" id="training-mode">
+    </div>
+  </div>
+  <div class="card-body" id="training-section" style="display: none;">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="text-center">
+          <h6 class="text-light">Precisión</h6>
+          <div class="display-6 text-info mb-2" id="accuracy">0%</div>
+          <small class="text-muted" id="attempts">Intentos: 0</small>
         </div>
       </div>
+      <div class="col-md-6">
+        <div class="text-center">
+          <h6 class="text-light">Mejor Racha</h6>
+          <div class="display-6 text-warning mb-2" id="best-streak">0</div>
+          <small class="text-muted" id="current-streak">Racha actual: 0</small>
+        </div>
+      </div>
+    </div>
+    <div class="mt-3">
+      <h6 class="text-light mb-2">Últimos Intentos</h6>
+      <div class="progress" style="height: 25px;">
+        <div class="progress-bar bg-success" id="hits-bar" style="width: 0%" title="Aciertos"></div>
+        <div class="progress-bar bg-danger" id="misses-bar" style="width: 0%" title="Fallos"></div>
+      </div>
+    </div>
+
+    <!-- Botón para reiniciar estadísticas -->
+    <div class="mt-3 d-flex justify-content-end">
+      <button id="reset-training-btn" class="btn btn-sm btn-outline-danger">
+        <i class="bi bi-arrow-counterclockwise"></i> Reiniciar Estadísticas
+      </button>
+    </div>
+  </div>
+</div>
+
 
       <!-- Sistema de Notas -->
       <div class="card bg-dark border-secondary mb-4">

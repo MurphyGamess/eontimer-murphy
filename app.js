@@ -7,6 +7,7 @@ const subTimer = document.getElementById("subTimer");
 const startButton = document.getElementById("startButton");
 const updateButton = document.getElementById("updateButton");
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+const resetTrainingBtn = document.getElementById('reset-training-btn');
 
 // NUEVO: Mostrar info de frames
 let frameInfo = document.getElementById("frameInfo");
@@ -435,6 +436,20 @@ let trainingStats = {
   bestStreak: 0,
   attempts: []
 };
+
+// Modo entrenador Boton de Reinicio
+resetTrainingBtn?.addEventListener('click', () => {
+  trainingStats = {
+    hits: 0,
+    misses: 0,
+    currentStreak: 0,
+    bestStreak: 0,
+    attempts: []
+  };
+
+  localStorage.removeItem('trainingStats');
+  updateTrainingDisplay();
+});
 
 const trainingMode = document.getElementById('training-mode');
 const trainingSection = document.getElementById('training-section');
