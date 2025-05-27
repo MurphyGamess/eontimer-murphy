@@ -76,13 +76,11 @@ const formatTime = millis => {
   return `${seconds}:${ms.toString().padStart(3, "0")}`;
 };
 
-// AJUSTADO: Guardar calibración en localStorage
+// AJUSTADO: Ya no guardamos calibración en localStorage automáticamente
 const getAdjustedTargetMillis = (target, hit) => {
   if (hit <= 0) return target;
   const offset = target - hit;
   calibrationInput.value = offset;
-  // Guardar calibración
-  localStorage.setItem('rngCalibration', offset);
   return target + offset;
 };
 
@@ -150,10 +148,8 @@ const onInputChange = () => {
   mainTimer.textContent = formatTime(preTimerMillis);
 };
 
-// Escuchar cambios en inputs para actualizar en tiempo real
+// Ya no cargamos la calibración al inicio
 window.addEventListener("load", () => {
-  const savedCalib = localStorage.getItem('rngCalibration');
-  if (savedCalib !== null) calibrationInput.value = savedCalib;
   onInputChange();
 });
 targetFrameInput.addEventListener("input", onInputChange);
