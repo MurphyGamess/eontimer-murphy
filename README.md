@@ -5,8 +5,8 @@ Desarrollado con **Electron.js**, **Bootstrap**, y almacenamiento local.
 Como usa Bootstrap no lo consulta de forma local a tener en cuenta.
 usa internet pasa ejecutar lo anterior mencionado.
 
-![Preview](resources/themes/default/images/backgroundX.png)
-
+![Preview](resources/themes/default/Preview/{9FAE8BFD-0399-430C-87F5-67E906853F68}.png)
+![Preview](resources/themes/default/Preview/{F8F4F0BA-CB1B-47DE-9CCE-9419DFD30624}.png)
 ---
 
 ## 📦 Características

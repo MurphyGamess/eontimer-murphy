@@ -1,3 +1,9 @@
+/* Variables CSS root */
+:root {
+  --bg-fade-color: #121212;
+  --bg-image: none;
+}
+
 /* Contenedor del logo para posicionamiento */
 .logo-container {
   position: absolute;
@@ -9,8 +15,6 @@
   z-index: 20;
   pointer-events: none;
 }
-
-
 
 /* Logo */
 #navbarLogo {
@@ -31,100 +35,164 @@
   padding-top: 110px; /* espacio suficiente para logo de 100px */
 }
 
-    
-      body {
-        background-color: #121212;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-      }
+/* Estilos del fondo */
+body {
+  background-color: var(--bg-fade-color);
+  background-image: var(--bg-image);
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow-x: hidden;
+}
 
-      .navbar {
-        background-color: rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(5px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
+/* Contenedor del fondo con efecto */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--bg-image);
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: no-repeat;
+  z-index: -2;
+}
 
-      .navbar-brand {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #f8f9fa;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.3rem;
-      }
+/* Overlay para el efecto de desvanecimiento */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 60%,
+    rgba(18, 18, 18, 0.8) 85%,
+    var(--bg-fade-color) 100%
+  );
+  z-index: -1;
+}
 
-      #navbarLogo {
-        height: 100px;
-        display: block;
-      }
+.navbar {
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-      #settingsButton {
-        border: none;
-        background: none;
-        color: #f8f9fa;
-        font-size: 1.5rem;
-        margin-left: auto;
-      }
+.navbar-brand {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
 
-      #settingsButton i {
-        transition: transform 0.3s ease;
-      }
+#settingsButton {
+  border: none;
+  background: none;
+  color: #f8f9fa;
+  font-size: 1.5rem;
+  margin-left: auto;
+}
 
-      #settingsButton:hover i {
-        transform: rotate(90deg);
-      }
+#settingsButton i {
+  transition: transform 0.3s ease;
+}
 
-      .container {
-        max-width: 600px;
-        margin-top: 2rem;
-        background: rgba(0, 0, 0, 0.65);
-        padding: 2rem;
-        border-radius: 1rem;
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-      }
+#settingsButton:hover i {
+  transform: rotate(90deg);
+}
 
-      #mainTimer {
-        font-size: 4rem;
-        font-weight: bold;
-        color: #0dcaf0;
-      }
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  margin-top: 2rem;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
 
-      #subTimer {
-        font-size: 2rem;
-        color: #adb5bd;
-      }
+/* Ajustes para el modal */
+.modal-content {
+  background: rgba(33, 37, 41, 0.95) !important;
+  backdrop-filter: blur(10px);
+}
 
-      #mostrarTiempoBtn {
-        font-size: 1.5rem;
-        margin-top: 1rem;
-        color: #f8f9fa;
-      }
+/* Mejoras visuales para los inputs y selects */
+.form-control, .form-select {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
 
-      .form-label {
-        color: #f8f9fa;
-        margin-top: 0.5rem;
-      }
+.form-control:focus, .form-select:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+}
 
-      .form-control,
-      .form-select {
-        background-color: #343a40;
-        border: 1px solid #495057;
-        color: #f8f9fa;
-      }
+/* Estilo para el texto de los selects */
+.form-select option {
+  background-color: #212529;
+  color: #fff;
+}
 
-      .form-control:disabled {
-        background-color: #444;
-        color: #aaa;
-      }
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+  .container {
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+  
+  body::before {
+    background-size: cover;
+  }
+}
 
-      .btn-primary,
-      .btn-success {
-        width: 48%;
-      }
+#mainTimer {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #0dcaf0;
+}
 
-      .modal-content {
-        background-color: #1f1f1f;
-        color: white;
-      }
+#subTimer {
+  font-size: 2rem;
+  color: #adb5bd;
+}
+
+#mostrarTiempoBtn {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  color: #f8f9fa;
+}
+
+.form-label {
+  color: #f8f9fa;
+  margin-top: 0.5rem;
+}
+
+.form-control:disabled {
+  background-color: #444;
+  color: #aaa;
+}
+
+.btn-primary,
+.btn-success {
+  width: 48%;
+}
+

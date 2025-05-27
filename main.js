@@ -5,6 +5,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 900,
     height: 700,
+    //frame: false,  // Oculta la barra nativa
     webPreferences: {
       nodeIntegration: true,  // para que en renderer.js puedas usar require
       contextIsolation: false, // lo mismo para habilitar require()

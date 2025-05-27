@@ -67,12 +67,62 @@ function populateSelect(selectElement, items) {
   });
 }
 
-function applyBackground(imageFile) {
-  if (!imageFile) return;
-  document.body.style.backgroundImage = `url('resources/themes/default/images/${imageFile}')`;
-  document.body.style.backgroundSize = 'cover';
-  document.body.style.backgroundRepeat = 'no-repeat';
-  document.body.style.backgroundPosition = 'center center';
+function applyBackground(filename) {
+  if (!filename) return;
+  
+  // Usar path.join para crear rutas correctas
+  const relativePath = `./resources/themes/default/images/${filename}`;
+  const absolutePath = path.join(__dirname, 'resources', 'themes', 'default', 'images', filename);
+  
+  // Verificar si el archivo existe
+  if (!fs.existsSync(absolutePath)) {
+    console.error(`Error: Image file not found: ${absolutePath}`);
+    return;
+  }
+  
+  // Cargar la imagen primero para obtener su color dominante
+  const img = new Image();
+  img.onload = () => {
+    // Crear un canvas para analizar el color
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = img.width;
+    canvas.height = 1; // Solo necesitamos la primera línea de píxeles
+    ctx.drawImage(img, 0, 0);
+    
+    // Obtener el color dominante de la parte inferior de la imagen
+    const imageData = ctx.getImageData(0, 0, canvas.width, 1).data;
+    let r = 0, g = 0, b = 0;
+    for (let i = 0; i < imageData.length; i += 4) {
+      r += imageData[i];
+      g += imageData[i + 1];
+      b += imageData[i + 2];
+    }
+    const pixels = imageData.length / 4;
+    const avgColor = {
+      r: Math.round(r / pixels),
+      g: Math.round(g / pixels),
+      b: Math.round(b / pixels)
+    };
+    
+    // Aplicar la imagen y el color de fondo
+    document.body.style.setProperty('--bg-fade-color', `rgb(${avgColor.r}, ${avgColor.g}, ${avgColor.b})`);
+    document.body.style.backgroundImage = `url('${relativePath}')`;
+    document.body.style.backgroundColor = `rgb(${avgColor.r}, ${avgColor.g}, ${avgColor.b})`;
+    
+    // Aplicar la imagen al pseudo-elemento
+    document.documentElement.style.setProperty('--bg-image', `url('${relativePath}')`);
+    
+    // Guardar en configuración
+    const settings = loadSettings();
+    settings.background = filename;
+    saveSettings(settings);
+  };
+  
+  img.src = relativePath;
+  img.onerror = () => {
+    console.error(`Error loading image: ${relativePath}`);
+  };
 }
 
 function applyLogo(imageFile) {
@@ -81,12 +131,22 @@ function applyLogo(imageFile) {
     navbarLogo.src = '';
     logoPreviewImage.style.display = 'none';
     logoPreviewImage.src = '';
-  } else {
-    navbarLogo.src = `resources/themes/default/logos/${imageFile}`;
-    navbarLogo.style.display = 'inline-block';
-    logoPreviewImage.src = `resources/themes/default/logos/${imageFile}`;
-    logoPreviewImage.style.display = 'inline-block';
+    return;
   }
+
+  const relativePath = `./resources/themes/default/logos/${imageFile}`;
+  const absolutePath = path.join(__dirname, 'resources', 'themes', 'default', 'logos', imageFile);
+
+  // Verificar si el archivo existe
+  if (!fs.existsSync(absolutePath)) {
+    console.error(`Error: Logo file not found: ${absolutePath}`);
+    return;
+  }
+
+  navbarLogo.src = relativePath;
+  navbarLogo.style.display = 'inline-block';
+  logoPreviewImage.src = relativePath;
+  logoPreviewImage.style.display = 'inline-block';
 }
 
 
