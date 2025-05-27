@@ -6,6 +6,7 @@ const mainTimer = document.getElementById("mainTimer");
 const subTimer = document.getElementById("subTimer");
 const startButton = document.getElementById("startButton");
 const updateButton = document.getElementById("updateButton");
+const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
 // NUEVO: Mostrar info de frames
 let frameInfo = document.getElementById("frameInfo");
@@ -607,6 +608,15 @@ function loadDelayHistory() {
     });
   }
 }
+
+// Eliminar Historial
+clearHistoryBtn?.addEventListener('click', () => {
+  // Vaciar la tabla de historial (suponiendo que delayHistory es tbody)
+  delayHistory.innerHTML = '';
+
+  // Eliminar el historial guardado en localStorage
+  localStorage.removeItem('delayHistory');
+});
 
 // Modificar el updateButton para incluir el modo entrenamiento
 document.getElementById('updateButton')?.addEventListener('click', () => {
