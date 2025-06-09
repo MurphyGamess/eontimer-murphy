@@ -1,0 +1,172 @@
+/* ============================================
+   ICON STYLES & COLORS
+   ============================================ */
+
+/* Controller Icons (Blue) */
+.bi-controller {
+  color: #667eea !important;
+}
+
+/* Bullseye Icons (Teal) */
+.bi-bullseye {
+  color: #17c0eb !important;
+}
+
+/* Calculator Icons (Yellow) */
+.bi-calculator {
+  color: #f6d55c !important;
+}
+
+/* Journal/Notes Icons (Gray) */
+.bi-journal-text {
+  color: #9ca3af !important;
+}
+
+/* Settings/Gear Icons (Green) */
+.bi-gear {
+  color: #34d399 !important;
+}
+
+/* Timer/Stopwatch Icons (Orange) */
+.bi-stopwatch {
+  color: #fb7185 !important;
+}
+
+/* Additional Icon Colors */
+.bi-bar-chart {
+  color: #8b5cf6 !important;
+}
+
+.bi-tag {
+  color: #06d6a0 !important;
+}
+
+.bi-image {
+  color: #fbbf24 !important;
+}
+
+.bi-eye {
+  color: #3b82f6 !important;
+}
+
+.bi-save {
+  color: #10b981 !important;
+}
+
+/* Action Button Icons */
+.bi-arrow-clockwise {
+  color: #667eea !important;
+}
+
+.bi-play-circle {
+  color: #34d399 !important;
+}
+
+/* Form Label Icons */
+.bi-clock {
+  color: #f59e0b !important;
+}
+
+.bi-crosshair {
+  color: #ef4444 !important;
+}
+
+/* Additional Utility Icons */
+.bi-plus-lg {
+  color: #10b981 !important;
+}
+
+.bi-trash {
+  color: #ef4444 !important;
+}
+
+/* Icon Hover Effects in Cards */
+.card-header .bi {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Icon Effects in Navigation */
+.nav-link .bi {
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover .bi {
+  transform: scale(1.1);
+}
+
+.nav-link.active .bi {
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.3));
+}
+
+/* ============================================
+   TIMER COMPONENTS
+   ============================================ */
+
+#mainTimer {
+  font-size: 3.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+}
+
+#subTimer {
+  font-size: 1.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+#mostrarTiempoBtn {
+  margin-top: 1rem;
+  border-radius: 25px;
+  font-weight: 600;
+}
+
+/* ============================================
+   FORM COMPONENTS
+   ============================================ */
+
+.form-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.form-control:disabled {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================
+   BUTTON COMPONENTS
+   ============================================ */
+
+.btn-primary,
+.btn-secondary {
+  border-radius: 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(145deg, #667eea, #764ba2);
+  border: none;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(145deg, #764ba2, #667eea);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+} 

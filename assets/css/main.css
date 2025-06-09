@@ -1,0 +1,368 @@
+/* Variables CSS root */
+:root {
+  --bg-fade-color: #121212;
+  --bg-image: none;
+}
+
+/* ============================================
+   DASHBOARD LAYOUT STYLES
+   ============================================ */
+
+/* Dashboard Navigation Styles */
+.dashboard-nav {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 0.5rem;
+  backdrop-filter: blur(10px);
+  margin-bottom: 1rem;
+}
+
+.dashboard-nav .nav-pills .nav-link {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.dashboard-nav .nav-pills .nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-nav .nav-pills .nav-link.active {
+  background: linear-gradient(145deg, #667eea, #764ba2);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Tab Content Styles */
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card Enhancements */
+.card {
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Anular bordes de colores específicos de Bootstrap */
+.border-primary, .border-info, .border-success, .border-warning, .border-danger, .border-secondary {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+  border-radius: 15px 15px 0 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Contenedor del logo para posicionamiento */
+.logo-container {
+  position: absolute;
+  top: 0px; /* este valor se actualizará con JS */
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  text-align: center;
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Logo */
+#navbarLogo {
+  max-width: 200px !important;
+  height: 100px;
+  display: block;
+  position: relative; /* para que top funcione */
+  pointer-events: none;
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5));
+  margin: 0 auto;
+}
+
+/* Contenedor timer para que no suba */
+/* Deja espacio para el logo en el layout */
+.timers-container {
+  position: relative;
+  z-index: 10;
+  padding-top: 110px; /* espacio suficiente para logo de 100px */
+}
+
+/* Estilos del fondo */
+body {
+  background-color: var(--bg-fade-color, #121212);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Contenedor del fondo con efecto */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -2;
+  opacity: 0.8;
+}
+
+/* Overlay para el efecto de desvanecimiento */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 60%,
+    rgba(18, 18, 18, 0.8) 85%,
+    var(--bg-fade-color) 100%
+  );
+  z-index: -1;
+}
+
+.navbar {
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar-brand {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+#settingsButton {
+  border: none;
+  background: none;
+  color: #f8f9fa;
+  font-size: 1.5rem;
+  margin-left: auto;
+}
+
+#settingsButton i {
+  transition: transform 0.3s ease;
+}
+
+#settingsButton:hover i {
+  transform: rotate(90deg);
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin-top: 2rem;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* Ajustes para el modal */
+.modal-content {
+  background: rgba(33, 37, 41, 0.1) !important;
+  backdrop-filter: blur(30px);
+  border-radius: 15px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: none !important;
+}
+
+.modal-header {
+  border-radius: 15px 15px 0 0 !important;
+  border-bottom: none !important;
+}
+
+.modal-body .card {
+  background: rgba(33, 37, 41, 0.2) !important;
+  backdrop-filter: blur(15px);
+  border: none !important;
+}
+
+.modal-body .card:hover {
+  transform: translateY(-2px);
+  transition: transform 0.3s ease;
+}
+
+.modal-footer {
+  border-radius: 0 0 15px 15px !important;
+  border-top: none !important;
+}
+
+/* Mejoras visuales para los inputs y selects */
+.form-control, .form-select {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+}
+
+/* Estilo para el texto de los selects */
+.form-select option {
+  background-color: #212529;
+  color: #fff;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+  .container {
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+  
+  body::before {
+    background-size: cover;
+  }
+  
+  .dashboard-nav .nav-pills .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Icon Colors */
+.bi-controller {
+  color: #007bff !important;
+}
+
+.bi-bullseye {
+  color: #17a2b8 !important;
+}
+
+.bi-calculator {
+  color: #ffc107 !important;
+}
+
+.bi-journal-text {
+  color: #6c757d !important;
+}
+
+.bi-gear {
+  color: #28a745 !important;
+}
+
+.bi-stopwatch {
+  color: #fd7e14 !important;
+}
+
+.bi-bar-chart {
+  color: #20c997 !important;
+}
+
+.bi-tag {
+  color: #17a2b8 !important;
+}
+
+.bi-image {
+  color: #ffc107 !important;
+}
+
+.bi-eye {
+  color: #28a745 !important;
+}
+
+.bi-save {
+  color: #fff !important;
+}
+
+/* Card Header Icons */
+.card-header .bi {
+  opacity: 0.9;
+}
+
+/* Navigation Icons */
+.nav-link .bi {
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover .bi {
+  transform: scale(1.1);
+}
+
+.nav-link.active .bi {
+  color: #fff !important;
+}
+
+#mainTimer {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #0dcaf0;
+}
+
+#subTimer {
+  font-size: 2rem;
+  color: #adb5bd;
+}
+
+#mostrarTiempoBtn {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  color: #f8f9fa;
+}
+
+.form-label {
+  color: #f8f9fa;
+  margin-top: 0.5rem;
+}
+
+.form-control:disabled {
+  background-color: #444;
+  color: #aaa;
+}
+
+.btn-primary,
+.btn-success {
+  width: 48%;
+}
+

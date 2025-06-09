@@ -1,0 +1,322 @@
+/* CSS Pokeball Effects - Clean Version */
+
+/* Base variables */
+:root {
+  --cell: 41px;
+  --celly: 40px;
+}
+
+/* Pokeball sprite container */
+.pokeball-simeydotme {
+  position: fixed !important;
+  width: var(--cell);
+  height: var(--celly);
+  background-image: url('../pokeballs/pokeball-sprites-oficial.png') !important;
+  background-repeat: no-repeat !important;
+  background-size: calc(41px * 27) calc(40px * 11) !important;
+  z-index: 999 !important;
+  visibility: visible !important;
+  display: block !important;
+  opacity: 1 !important;
+  transform: translateZ(0) !important;
+  will-change: transform, opacity !important;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Ball class for simeydotme system */
+.ball {
+  margin: 1px;
+  position: relative;
+  bottom: -9px;
+  width: var(--cell);
+  height: var(--celly);
+  background-image: url('../pokeballs/pokeball-sprites-oficial.png') !important;
+  background-position: 0 0 !important;
+  background-repeat: no-repeat !important;
+  background-size: calc(41px * 27) calc(40px * 11) !important;
+  transform-origin: center bottom !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 999999 !important;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.ball:before {
+  content: "";
+  position: absolute;
+  left: 30%;
+  bottom: 8px;
+  width: 40%;
+  height: 3px;
+  border-radius: 100%;
+  background: black;
+  box-shadow: 0 1px 2px black;
+  opacity: 0.3;
+}
+
+/* Ball states */
+.ball.open {
+  background-position-y: calc(var(--celly) * -10);
+}
+
+.ball.side {
+  background-position-y: calc(var(--celly) * -9);
+}
+
+/* Ball animations */
+.ball.roll {
+  animation: ball-roll 1s steps(1) infinite;
+}
+
+.ball.rock {
+  animation: ball-rock 1.22s steps(1) infinite;
+}
+
+.ball.bounce {
+  animation-name: bounce;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+.ball.bounce:before {
+  animation-name: bounce-shadow;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+/* Pokeball positions - all 27 types */
+.poke.ball { background-position-x: calc(var(--cell) * 0); }
+.great.ball { background-position-x: calc(var(--cell) * -1); }
+.safari.ball { background-position-x: calc(var(--cell) * -2); }
+.ultra.ball { background-position-x: calc(var(--cell) * -3); }
+.master.ball { background-position-x: calc(var(--cell) * -4); }
+.net.ball { background-position-x: calc(var(--cell) * -5); }
+.dive.ball { background-position-x: calc(var(--cell) * -6); }
+.nest.ball { background-position-x: calc(var(--cell) * -7); }
+.repeat.ball { background-position-x: calc(var(--cell) * -8); }
+.timer.ball { background-position-x: calc(var(--cell) * -9); }
+.luxury.ball { background-position-x: calc(var(--cell) * -10); }
+.premier.ball { background-position-x: calc(var(--cell) * -11); }
+.dusk.ball { background-position-x: calc(var(--cell) * -12); }
+.heal.ball { background-position-x: calc(var(--cell) * -13); }
+.quick.ball { background-position-x: calc(var(--cell) * -14); }
+.cherish.ball { background-position-x: calc(var(--cell) * -15); }
+.fast.ball { background-position-x: calc(var(--cell) * -16); }
+.level.ball { background-position-x: calc(var(--cell) * -17); }
+.lure.ball { background-position-x: calc(var(--cell) * -18); }
+.heavy.ball { background-position-x: calc(var(--cell) * -19); }
+.love.ball { background-position-x: calc(var(--cell) * -20); }
+.friend.ball { background-position-x: calc(var(--cell) * -21); }
+.moon.ball { background-position-x: calc(var(--cell) * -22); }
+.sport.ball { background-position-x: calc(var(--cell) * -23); }
+.park.ball { background-position-x: calc(var(--cell) * -24); }
+.dream.ball { background-position-x: calc(var(--cell) * -25); }
+.beast.ball { background-position-x: calc(var(--cell) * -26); }
+
+/* Alternative names */
+.pokeball.ball { background-position-x: 0; }
+.greatball.ball { background-position-x: calc(var(--cell) * -1); }
+.ultraball.ball { background-position-x: calc(var(--cell) * -3); }
+.masterball.ball { background-position-x: calc(var(--cell) * -4); }
+.quickball.ball { background-position-x: calc(var(--cell) * -14); }
+.timerball.ball { background-position-x: calc(var(--cell) * -9); }
+.duskball.ball { background-position-x: calc(var(--cell) * -12); }
+.premierball.ball { background-position-x: calc(var(--cell) * -11); }
+.netball.ball { background-position-x: calc(var(--cell) * -5); }
+.nestball.ball { background-position-x: calc(var(--cell) * -7); }
+
+/* Keyframe animations */
+@keyframes ball-roll {
+  0% { background-position-y: 0; }
+  12.5% { background-position-y: calc(var(--celly) * -1); }
+  25% { background-position-y: calc(var(--celly) * -2); }
+  37.5% { background-position-y: calc(var(--celly) * -3); }
+  50% { background-position-y: calc(var(--celly) * -4); }
+  62.5% { background-position-y: calc(var(--celly) * -5); }
+  75% { background-position-y: calc(var(--celly) * -6); }
+  87.5% { background-position-y: calc(var(--celly) * -7); }
+  100% { background-position-y: calc(var(--celly) * -8); }
+}
+
+@keyframes ball-rock {
+  0% { background-position-y: 0; }
+  8.33% { background-position-y: calc(var(--celly) * -11); }
+  16.66% { background-position-y: calc(var(--celly) * -12); }
+  25% { background-position-y: calc(var(--celly) * -13); }
+  33.33% { background-position-y: calc(var(--celly) * -12); }
+  41.66% { background-position-y: calc(var(--celly) * -11); }
+  50% { background-position-y: calc(var(--celly) * 0); }
+  58.33% { background-position-y: calc(var(--celly) * -14); }
+  66.66% { background-position-y: calc(var(--celly) * -15); }
+  75% { background-position-y: calc(var(--celly) * -16); }
+  83.33% { background-position-y: calc(var(--celly) * -15); }
+  91.66% { background-position-y: calc(var(--celly) * -14); }
+  100% { background-position-y: calc(var(--celly) * 0); }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0) scaleY(.75) scaleX(1.15);
+    animation-timing-function: ease-in;
+  }
+  10% {
+    transform: translateY(-10%) scaleY(1) scaleX(1);
+    animation-timing-function: ease-out;
+  }
+  50% {
+    transform: translateY(-80%) scaleY(1.1) scaleX(.95);
+    animation-timing-function: ease-in;
+  }
+  90% {
+    transform: translateY(-10%) scaleY(1) scaleX(1);
+    animation-timing-function: ease-out;
+  }
+}
+
+@keyframes bounce-shadow {
+  0%, 100% {
+    opacity: .4;
+    transform: translateY(0) scaleY(1) scaleX(1);
+  }
+  10%, 90% {
+    opacity: 0;
+    transform: translateY(200%) scaleY(.3) scaleX(.3);
+  }
+}
+
+/* Pokeball fall animation */
+@keyframes pokeball-fall {
+  0% { 
+    transform: translateY(-200px) rotate(0deg); 
+    opacity: 0; 
+  }
+  50% { 
+    opacity: 1; 
+  }
+  100% { 
+    transform: translateY(0px) rotate(720deg); 
+    opacity: 1; 
+  }
+}
+
+/* Special effects animations for JavaScript */
+@keyframes starBurst {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--random-x, 60px), var(--random-y, -80px)) scale(1.5) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes auraPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@keyframes sparklefall {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100px) rotate(360deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes energyBurst {
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5) translate(40px, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes particleBurst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--random-x, 50px), var(--random-y, -50px)) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes silverSparkle {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--random-x, 40px), var(--random-y, -60px)) scale(1.2) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes quickFlash {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes clockTick {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(0, -20px) scale(1.2) rotate(180deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(0, -40px) scale(0.8) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Hardware acceleration */
+.pokeball-simeydotme,
+.ball,
+*[class*="pokeball"] {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+

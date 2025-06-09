@@ -1,0 +1,130 @@
+/* =================================================================
+   SPRITE FIXES - Correcciones de posicionamiento y tamaños
+   ================================================================= */
+
+/* ===== SECUENCIAS DE ANIMACIÓN POKEBALL =====
+   IMPORTANTE: 
+   - APARECER: Frame 1 → 11 (pokeball se abre)
+   - DESAPARECER: Frame 11 → 1 (pokeball se cierra)
+   - CAÍDA CON APERTURA: Frames 1→11 durante la caída sincronizada
+   ================================================= */
+
+/* ===== POKEBALL SPRITES ===== */
+
+/* Pokeball sprites animados - Posicionamiento corregido */
+.pokeball-sprite-animated {
+  position: fixed !important;
+  width: 41px !important;
+  height: 40px !important;
+  background-image: url('../resources/sprites/pokeball-sprites-oficial.png') !important;
+  background-repeat: no-repeat !important;
+  background-size: 1106px 680px !important;
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+  transform-origin: center center !important;
+  z-index: 999999 !important;
+  pointer-events: none !important;
+}
+
+/* Posiciones corregidas para cada tipo de pokeball */
+.sprite-pokeball { background-position: 0px 0px !important; }
+.sprite-greatball { background-position: -41px 0px !important; }
+.sprite-safariball { background-position: -82px 0px !important; }
+.sprite-ultraball { background-position: -123px 0px !important; }
+.sprite-masterball { background-position: -164px 0px !important; }
+.sprite-premierball { background-position: -205px 0px !important; }
+.sprite-repeatball { background-position: -246px 0px !important; }
+.sprite-timerball { background-position: -287px 0px !important; }
+.sprite-nestball { background-position: -328px 0px !important; }
+.sprite-netball { background-position: -369px 0px !important; }
+.sprite-diveball { background-position: -410px 0px !important; }
+.sprite-luxuryball { background-position: -451px 0px !important; }
+.sprite-healball { background-position: -492px 0px !important; }
+.sprite-quickball { background-position: -533px 0px !important; }
+.sprite-duskball { background-position: -574px 0px !important; }
+.sprite-cherishball { background-position: -615px 0px !important; }
+.sprite-fastball { background-position: -656px 0px !important; }
+.sprite-levelball { background-position: -697px 0px !important; }
+.sprite-lureball { background-position: -738px 0px !important; }
+.sprite-heavyball { background-position: -779px 0px !important; }
+.sprite-loveball { background-position: -820px 0px !important; }
+.sprite-friendball { background-position: -861px 0px !important; }
+
+/* ===== POKEMON SPRITES ===== */
+
+/* Pokemon sin animación artificial - usan solo su GIF natural */
+.pokemon-floater {
+  position: fixed !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: auto !important; /* Usar tamaño natural del GIF */
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+  transform-origin: center center !important;
+  z-index: 9999 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  animation: none !important; /* Sin animación de flotación */
+}
+
+/* ===== EFECTOS ESPECIALES ===== */
+
+/* Pokeball con efecto de centrado perfecto */
+.pokeball-centered {
+  transform: translate(-50%, -50%) !important;
+  left: 50% !important;
+  top: 50% !important;
+}
+
+/* Pokemon shiny con efectos especiales */
+.pokemon-shiny {
+  filter: hue-rotate(45deg) saturate(1.3) brightness(1.1) !important;
+  animation: shinyGlow 3s ease-in-out infinite !important; /* Solo brillo, sin flotación */
+}
+
+@keyframes shinyGlow {
+  0%, 100% { 
+    box-shadow: 0 0 0 rgba(255, 215, 0, 0); 
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); 
+  }
+}
+
+/* ===== RESPONSIVE FIXES ===== */
+
+/* En pantallas pequeñas, ajustar tamaños */
+@media (max-width: 768px) {
+  .pokemon-floater {
+    max-width: 80px !important;
+    max-height: 80px !important;
+  }
+  
+  .pokeball-sprite-animated {
+    transform: scale(0.9) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .pokemon-floater {
+    max-width: 64px !important;
+    max-height: 64px !important;
+  }
+  
+  .pokeball-sprite-animated {
+    transform: scale(0.8) !important;
+  }
+}
+
+/* ===== DEBUGGING ===== */
+
+/* Outline para debugging (quitar en producción) */
+.debug-sprites .pokemon-floater {
+  outline: 1px solid lime !important;
+}
+
+.debug-sprites .pokeball-sprite-animated {
+  outline: 1px solid red !important;
+} 

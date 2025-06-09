@@ -1,0 +1,992 @@
+/* 🎮 POKEMON FLOATING SYSTEM - Animaciones que no interfieren con la UI */
+.pokemon-floater {
+  position: fixed !important;
+  z-index: 2000 !important; /* SÚPER VISIBLE */
+  pointer-events: auto !important;
+  width: 64px !important;
+  height: 64px !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-color: transparent !important;
+  opacity: 1 !important; /* SIEMPRE VISIBLE */
+  display: block !important; /* NUNCA OCULTO */
+  visibility: visible !important;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid red !important; /* DEBUG - para ver dónde están */
+}
+
+.pokemon-floater:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  pointer-events: auto; /* Permite hover effects */
+}
+
+/* Animación de caminar horizontal (izquierda a derecha) */
+@keyframes pokemon-walk-horizontal {
+  0% { transform: translateX(-80px) scaleX(1); }
+  100% { transform: translateX(calc(100vw + 80px)) scaleX(1); }
+}
+
+/* Animación de caminar horizontal reversa (derecha a izquierda) */
+@keyframes pokemon-walk-horizontal-reverse {
+  0% { transform: translateX(calc(100vw + 80px)) scaleX(-1); }
+  100% { transform: translateX(-80px) scaleX(-1); }
+}
+
+/* Animación de flotar vertical (de arriba hacia abajo) */
+@keyframes pokemon-float-vertical {
+  0% { transform: translateY(-80px); }
+  100% { transform: translateY(calc(100vh + 80px)); }
+}
+
+/* ✅ MANTENER: Solo efectos necesarios para Pokémon emergence */
+@keyframes pokemon-emerge-simple {
+  0% { 
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.2) rotate(180deg);
+    opacity: 1;
+  }
+  100% { 
+    transform: scale(1) rotate(360deg);
+    opacity: 0.8;
+  }
+}
+
+/* Clases de animación */
+.pokemon-walk-left {
+  animation: pokemon-walk-horizontal 15s linear infinite;
+}
+
+.pokemon-walk-right {
+  animation: pokemon-walk-horizontal-reverse 18s linear infinite;
+}
+
+.pokemon-float {
+  animation: pokemon-float-vertical 12s linear infinite;
+}
+
+.pokemon-emerge {
+  animation: pokemon-emerge-simple 2s ease-out;
+}
+
+/* Diferentes tamaños para variedad */
+.pokemon-small { width: 48px; height: 48px; }
+.pokemon-medium { width: 64px; height: 64px; }
+.pokemon-large { width: 80px; height: 80px; }
+
+/* Efectos especiales para Pokemon shiny */
+.pokemon-shiny {
+  filter: hue-rotate(60deg) saturate(1.5) brightness(1.2);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+/* Sparkle effect para shinies */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+.pokemon-shiny::after {
+  content: '✨';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 16px;
+  animation: sparkle 2s infinite;
+}
+
+/* Pokemon controls container */
+.pokemon-controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+}
+
+/* Control toggle para los Pokemon */
+.pokemon-toggle-btn {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid #00d4ff;
+  background: linear-gradient(145deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.2));
+  backdrop-filter: blur(10px);
+  color: #00d4ff;
+  font-size: 22px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokemon-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  background: linear-gradient(145deg, rgba(0, 212, 255, 0.3), rgba(139, 92, 246, 0.3));
+}
+
+.pokemon-toggle-btn.disabled {
+  opacity: 0.5;
+  color: #666;
+  border-color: #666;
+}
+
+/* Pokeball info button */
+.pokeball-info-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid #ff6b35;
+  background: linear-gradient(145deg, rgba(255, 107, 53, 0.2), rgba(247, 147, 30, 0.2));
+  backdrop-filter: blur(10px);
+  color: #ff6b35;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokeball-info-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+  background: linear-gradient(145deg, rgba(255, 107, 53, 0.3), rgba(247, 147, 30, 0.3));
+}
+
+/* === ANIMACIONES AVANZADAS PARA POKEBALLS === */
+
+/* Animaciones específicas de bounce para cada tipo de pokeball */
+@keyframes pokeball-pokeball-bounce {
+  0% { transform: translateY(-100px) rotate(0deg); }
+  20% { transform: translateY(-60px) rotate(180deg); }
+  40% { transform: translateY(-20px) rotate(360deg); }
+  60% { transform: translateY(-10px) rotate(540deg); }
+  80% { transform: translateY(-5px) rotate(720deg); }
+  100% { transform: translateY(0) rotate(720deg); }
+}
+
+@keyframes pokeball-masterball-bounce {
+  0% { 
+    transform: translateY(-120px) rotate(0deg) scale(1);
+    box-shadow: 0 0 30px rgba(136, 68, 255, 0.8);
+  }
+  20% { 
+    transform: translateY(-80px) rotate(180deg) scale(1.1);
+    box-shadow: 0 0 40px rgba(255, 105, 180, 0.9);
+  }
+  40% { 
+    transform: translateY(-30px) rotate(360deg) scale(1);
+    box-shadow: 0 0 50px rgba(136, 68, 255, 1);
+  }
+  60% { 
+    transform: translateY(-15px) rotate(540deg) scale(1.05);
+    box-shadow: 0 0 35px rgba(255, 105, 180, 0.8);
+  }
+  80% { 
+    transform: translateY(-8px) rotate(720deg) scale(1);
+    box-shadow: 0 0 25px rgba(136, 68, 255, 0.6);
+  }
+  100% { 
+    transform: translateY(0) rotate(720deg) scale(1);
+    box-shadow: 0 0 20px rgba(136, 68, 255, 0.5);
+  }
+}
+
+@keyframes pokeball-ultraball-bounce {
+  0% { 
+    transform: translateY(-110px) rotate(0deg);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+  }
+  20% { 
+    transform: translateY(-70px) rotate(180deg);
+    box-shadow: 0 0 35px rgba(255, 215, 0, 0.8);
+  }
+  40% { 
+    transform: translateY(-25px) rotate(360deg);
+    box-shadow: 0 0 45px rgba(255, 215, 0, 0.9);
+  }
+  60% { 
+    transform: translateY(-12px) rotate(540deg);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+  }
+  80% { 
+    transform: translateY(-6px) rotate(720deg);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+  100% { 
+    transform: translateY(0) rotate(720deg);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  }
+}
+
+@keyframes pokeball-greatball-bounce {
+  0% { 
+    transform: translateY(-105px) rotate(0deg);
+    box-shadow: 0 0 20px rgba(68, 136, 255, 0.6);
+  }
+  20% { 
+    transform: translateY(-65px) rotate(180deg);
+    box-shadow: 0 0 30px rgba(68, 136, 255, 0.7);
+  }
+  40% { 
+    transform: translateY(-22px) rotate(360deg);
+    box-shadow: 0 0 35px rgba(68, 136, 255, 0.8);
+  }
+  60% { 
+    transform: translateY(-11px) rotate(540deg);
+    box-shadow: 0 0 25px rgba(68, 136, 255, 0.6);
+  }
+  80% { 
+    transform: translateY(-5px) rotate(720deg);
+    box-shadow: 0 0 15px rgba(68, 136, 255, 0.4);
+  }
+  100% { 
+    transform: translateY(0) rotate(720deg);
+    box-shadow: 0 0 10px rgba(68, 136, 255, 0.3);
+  }
+}
+
+@keyframes pokeball-quickball-bounce {
+  0% { 
+    transform: translateY(-90px) rotate(0deg);
+    box-shadow: 0 0 20px rgba(68, 255, 255, 0.8);
+  }
+  10% { 
+    transform: translateY(-50px) rotate(90deg);
+    box-shadow: 0 0 30px rgba(68, 255, 255, 0.9);
+  }
+  20% { 
+    transform: translateY(-20px) rotate(180deg);
+    box-shadow: 0 0 35px rgba(68, 255, 255, 1);
+  }
+  30% { 
+    transform: translateY(-10px) rotate(270deg);
+    box-shadow: 0 0 25px rgba(68, 255, 255, 0.8);
+  }
+  50% { 
+    transform: translateY(-5px) rotate(450deg);
+    box-shadow: 0 0 20px rgba(68, 255, 255, 0.6);
+  }
+  100% { 
+    transform: translateY(0) rotate(720deg);
+    box-shadow: 0 0 15px rgba(68, 255, 255, 0.5);
+  }
+}
+
+@keyframes pokeball-timerball-bounce {
+  0% { 
+    transform: translateY(-100px) rotate(0deg);
+    box-shadow: 0 0 18px rgba(255, 102, 0, 0.6);
+  }
+  25% { 
+    transform: translateY(-60px) rotate(180deg);
+    box-shadow: 0 0 28px rgba(255, 102, 0, 0.8);
+  }
+  50% { 
+    transform: translateY(-20px) rotate(360deg);
+    box-shadow: 0 0 35px rgba(255, 102, 0, 0.9);
+  }
+  75% { 
+    transform: translateY(-8px) rotate(540deg);
+    box-shadow: 0 0 22px rgba(255, 102, 0, 0.7);
+  }
+  100% { 
+    transform: translateY(0) rotate(720deg);
+    box-shadow: 0 0 12px rgba(255, 102, 0, 0.5);
+  }
+}
+
+@keyframes pokeball-duskball-bounce {
+  0% { 
+    transform: translateY(-95px) rotate(0deg);
+    box-shadow: 0 0 15px rgba(68, 102, 68, 0.7);
+  }
+  30% { 
+    transform: translateY(-55px) rotate(216deg);
+    box-shadow: 0 0 25px rgba(68, 102, 68, 0.8);
+  }
+  60% { 
+    transform: translateY(-18px) rotate(432deg);
+    box-shadow: 0 0 30px rgba(68, 102, 68, 0.9);
+  }
+  80% { 
+    transform: translateY(-6px) rotate(648deg);
+    box-shadow: 0 0 20px rgba(68, 102, 68, 0.6);
+  }
+  100% { 
+    transform: translateY(0) rotate(720deg);
+    box-shadow: 0 0 10px rgba(68, 102, 68, 0.4);
+  }
+}
+
+@keyframes pokeball-premierball-bounce {
+  0% { 
+    transform: translateY(-98px) rotate(0deg);
+    box-shadow: 0 0 22px rgba(255, 255, 255, 0.8);
+  }
+  20% { 
+    transform: translateY(-62px) rotate(144deg);
+    box-shadow: 0 0 32px rgba(255, 255, 255, 0.9);
+  }
+  40% { 
+    transform: translateY(-24px) rotate(288deg);
+    box-shadow: 0 0 38px rgba(255, 255, 255, 1);
+  }
+  60% { 
+    transform: translateY(-12px) rotate(432deg);
+    box-shadow: 0 0 26px rgba(255, 255, 255, 0.8);
+  }
+  80% { 
+    transform: translateY(-4px) rotate(576deg);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.6);
+  }
+  100% { 
+    transform: translateY(0) rotate(720deg);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* Animación de flash para apertura de pokeball */
+@keyframes pokeball-flash {
+  0% { filter: brightness(1); transform: scale(1); }
+  50% { filter: brightness(3) saturate(2); transform: scale(1.3); }
+  100% { filter: brightness(1); transform: scale(1); opacity: 0; }
+}
+
+/* Animación de Master Ball sparkle */
+@keyframes masterball-sparkle {
+  0% { filter: brightness(1) drop-shadow(0 0 5px gold); }
+  100% { filter: brightness(1.3) drop-shadow(0 0 15px gold); }
+}
+
+/* Efectos especiales de pokeballs */
+@keyframes star-fall {
+  0% { transform: translateY(0px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(300px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes ultra-flash {
+  0% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+
+@keyframes speed-wave {
+  0% { opacity: 1; transform: scale(0); }
+  100% { opacity: 0; transform: scale(4); }
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(0px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(400px) rotate(720deg); opacity: 0; }
+}
+
+@keyframes number-fall {
+  0% { transform: translateY(0px); opacity: 1; font-size: 24px; }
+  50% { font-size: 18px; }
+  100% { transform: translateY(200px); opacity: 0; font-size: 12px; }
+}
+
+@keyframes shadow-expand {
+  0% { opacity: 0; transform: scale(0); }
+  50% { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+
+/* EFECTOS POKEBALL REALISTAS */
+@keyframes flash-burst {
+  0% { 
+    opacity: 0; 
+    transform: scale(0); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.5); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(2); 
+  }
+}
+
+@keyframes emergence-beam {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.5); 
+  }
+  30% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+  70% { 
+    opacity: 0.8; 
+    transform: scale(1.2); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(1.5); 
+  }
+}
+
+/* Pokeball realista sin resplandores */
+.pokeball-realistic {
+  animation-timing-function: ease-in-out;
+}
+
+/* ✨ NUEVAS ANIMACIONES ÉPICAS PARA POKEBALLS ✨ */
+
+/* MASTER BALL - Efectos legendarios */
+@keyframes master-explosion {
+  0% { 
+    opacity: 0; 
+    transform: scale(0); 
+    filter: brightness(1) blur(10px);
+  }
+  30% { 
+    opacity: 0.9; 
+    transform: scale(1.2); 
+    filter: brightness(2) blur(5px);
+  }
+  60% { 
+    opacity: 1; 
+    transform: scale(1.5); 
+    filter: brightness(1.5) blur(2px);
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(2); 
+    filter: brightness(1) blur(0px);
+  }
+}
+
+@keyframes master-wave {
+  0% { 
+    opacity: 0.8; 
+    transform: scale(0); 
+    border-width: 3px;
+  }
+  50% { 
+    opacity: 0.6; 
+    transform: scale(2); 
+    border-width: 2px;
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(4); 
+    border-width: 1px;
+  }
+}
+
+@keyframes master-star-fall {
+  0% { 
+    transform: translateY(-20px) rotate(0deg) scale(1); 
+    opacity: 1; 
+  }
+  50% { 
+    transform: translateY(100px) rotate(180deg) scale(1.2); 
+    opacity: 0.8; 
+  }
+  100% { 
+    transform: translateY(300px) rotate(360deg) scale(0.5); 
+    opacity: 0; 
+  }
+}
+
+@keyframes master-particle-float {
+  0% { 
+    transform: translateY(0px) translateX(0px) scale(1); 
+    opacity: 1; 
+  }
+  25% { 
+    transform: translateY(-30px) translateX(20px) scale(1.1); 
+    opacity: 0.9; 
+  }
+  50% { 
+    transform: translateY(-50px) translateX(-15px) scale(1.2); 
+    opacity: 0.7; 
+  }
+  75% { 
+    transform: translateY(-20px) translateX(30px) scale(0.9); 
+    opacity: 0.5; 
+  }
+  100% { 
+    transform: translateY(-100px) translateX(0px) scale(0.3); 
+    opacity: 0; 
+  }
+}
+
+/* ULTRA BALL - Efectos dorados épicos */
+@keyframes ultra-ray {
+  0% { 
+    opacity: 0; 
+    transform: scale(0) rotate(0deg); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1) rotate(0deg); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(1.5) rotate(0deg); 
+  }
+}
+
+@keyframes ultra-sparkle {
+  0% { 
+    transform: translateY(0px) rotate(0deg) scale(1); 
+    opacity: 1; 
+  }
+  50% { 
+    transform: translateY(-40px) rotate(180deg) scale(1.3); 
+    opacity: 0.8; 
+  }
+  100% { 
+    transform: translateY(-80px) rotate(360deg) scale(0.7); 
+    opacity: 0; 
+  }
+}
+
+/* QUICK BALL - Efectos de velocidad */
+@keyframes quick-speed-lines {
+  0% { 
+    opacity: 0; 
+    transform: scaleX(0) rotate(0deg); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scaleX(1) rotate(0deg); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scaleX(2) rotate(0deg); 
+  }
+}
+
+/* DUSK BALL - Efectos de sombra */
+@keyframes dusk-shadow {
+  0% { 
+    opacity: 0; 
+    transform: scale(0); 
+    filter: brightness(1);
+  }
+  50% { 
+    opacity: 0.8; 
+    transform: scale(1.5); 
+    filter: brightness(0.3);
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(2.5); 
+    filter: brightness(1);
+  }
+}
+
+/* TIMER BALL - Efectos de tiempo */
+@keyframes timer-tick {
+  0% { 
+    transform: scale(1) rotate(0deg); 
+    opacity: 1; 
+  }
+  50% { 
+    transform: scale(1.2) rotate(180deg); 
+    opacity: 0.7; 
+  }
+  100% { 
+    transform: scale(0.8) rotate(360deg); 
+    opacity: 0; 
+  }
+}
+
+/* DUSK BALL - Animación de murciélagos */
+@keyframes dusk-bat-fly {
+  0% { 
+    transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); 
+    opacity: 1; 
+  }
+  25% { 
+    transform: translateY(-40px) translateX(-30px) rotate(-15deg) scale(1.1); 
+    opacity: 0.9; 
+  }
+  50% { 
+    transform: translateY(-70px) translateX(20px) rotate(10deg) scale(1.2); 
+    opacity: 0.7; 
+  }
+  75% { 
+    transform: translateY(-50px) translateX(-40px) rotate(-20deg) scale(0.9); 
+    opacity: 0.4; 
+  }
+  100% { 
+    transform: translateY(-150px) translateX(50px) rotate(25deg) scale(0.5); 
+    opacity: 0; 
+  }
+}
+
+/* ⚡ EFECTOS ULTRA-REALISTAS DE POKEBALL DIVISIÓN ⚡ */
+
+/* División de mitad superior */
+@keyframes pokeball-split-top {
+  0% { 
+    transform: translateY(0px) rotate(0deg); 
+    opacity: 1; 
+  }
+  50% { 
+    transform: translateY(-20px) rotate(-15deg); 
+    opacity: 0.8; 
+  }
+  100% { 
+    transform: translateY(-40px) rotate(-30deg); 
+    opacity: 0; 
+  }
+}
+
+/* División de mitad inferior */
+@keyframes pokeball-split-bottom {
+  0% { 
+    transform: translateY(0px) rotate(0deg); 
+    opacity: 1; 
+  }
+  50% { 
+    transform: translateY(20px) rotate(15deg); 
+    opacity: 0.8; 
+  }
+  100% { 
+    transform: translateY(40px) rotate(30deg); 
+    opacity: 0; 
+  }
+}
+
+/* Desvanecimiento general */
+@keyframes fade-out {
+  0% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(0.5); 
+  }
+}
+
+/* Expansión del rayo de luz central */
+@keyframes light-beam-expand {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.2); 
+    filter: brightness(2); 
+  }
+  30% { 
+    opacity: 1; 
+    transform: scale(1); 
+    filter: brightness(3); 
+  }
+  70% { 
+    opacity: 0.8; 
+    transform: scale(2); 
+    filter: brightness(2); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(3); 
+    filter: brightness(1); 
+  }
+}
+
+/* Rebote mejorado para pokeballs avanzadas */
+@keyframes pokeball-advanced-bounce {
+  0% { 
+    transform: scale(0) rotate(0deg) translateY(0px); 
+    opacity: 0; 
+  }
+  20% { 
+    transform: scale(0.8) rotate(180deg) translateY(-10px); 
+    opacity: 1; 
+  }
+  40% { 
+    transform: scale(1.1) rotate(360deg) translateY(5px); 
+  }
+  60% { 
+    transform: scale(0.9) rotate(540deg) translateY(-2px); 
+  }
+  80% { 
+    transform: scale(1.05) rotate(720deg) translateY(1px); 
+  }
+  100% { 
+    transform: scale(1) rotate(720deg) translateY(0px); 
+  }
+}
+
+/* Temblor de captura (como en los juegos) */
+@keyframes pokeball-capture-shake {
+  0% { transform: rotate(0deg); }
+  10% { transform: rotate(-10deg); }
+  20% { transform: rotate(10deg); }
+  30% { transform: rotate(-8deg); }
+  40% { transform: rotate(8deg); }
+  50% { transform: rotate(-5deg); }
+  60% { transform: rotate(5deg); }
+  70% { transform: rotate(-3deg); }
+  80% { transform: rotate(3deg); }
+  90% { transform: rotate(-1deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pokemon-floater {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .pokemon-small { width: 36px; height: 36px; }
+  .pokemon-medium { width: 48px; height: 48px; }
+  .pokemon-large { width: 60px; height: 60px; }
+}
+
+/* 🎮 POKEBALL EFFECTS CSS - Efectos Avanzados Inspirados en simeydotme */
+/* Animaciones profesionales para efectos de pokeball realistas */
+
+/* ✨ ANIMACIONES HOLOGRÁFICAS */
+@keyframes holographic-rotation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes ambient-pulse {
+  0% { 
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% { 
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* 🎬 ANIMACIONES DE ENTRADA */
+@keyframes pokeball-pro-entrance {
+  0% {
+    transform: translateY(-100vh) rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(10px) rotate(360deg) scale(1.1);
+  }
+  80% {
+    transform: translateY(-5px) rotate(380deg) scale(0.95);
+  }
+  100% {
+    transform: translateY(0) rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* 🌪️ ANIMACIONES DE AGITACIÓN */
+@keyframes pokeball-pro-shake {
+  0%, 100% { 
+    transform: translate(0, 0) rotate(0deg);
+  }
+  10% { 
+    transform: translate(-8px, -2px) rotate(-15deg);
+  }
+  20% { 
+    transform: translate(8px, 2px) rotate(15deg);
+  }
+  30% { 
+    transform: translate(-6px, -4px) rotate(-10deg);
+  }
+  40% { 
+    transform: translate(6px, 4px) rotate(10deg);
+  }
+  50% { 
+    transform: translate(-4px, -1px) rotate(-5deg);
+  }
+  60% { 
+    transform: translate(4px, 1px) rotate(5deg);
+  }
+  70% { 
+    transform: translate(-2px, -2px) rotate(-3deg);
+  }
+  80% { 
+    transform: translate(2px, 2px) rotate(3deg);
+  }
+  90% { 
+    transform: translate(-1px, 0) rotate(-1deg);
+  }
+}
+
+@keyframes button-capture-blink {
+  0%, 100% { 
+    background: radial-gradient(circle at 30% 30%, 
+      #ffffff 0%, 
+      var(--button-color, #ffffff) 30%, 
+      var(--button-dark, #cccccc) 70%, 
+      #1a1a1a 100%);
+    box-shadow: 
+      0 0 0 2px #1a1a1a,
+      0 0 0 4px var(--button-color, #ffffff),
+      0 4px 8px rgba(0,0,0,0.4),
+      inset 0 2px 4px rgba(255,255,255,0.3),
+      0 0 20px var(--shadow-color, rgba(255,255,255,0.4));
+  }
+  50% { 
+    background: radial-gradient(circle at 30% 30%, 
+      #ff4444 0%, 
+      #cc0000 30%, 
+      #990000 70%, 
+      #1a1a1a 100%);
+    box-shadow: 
+      0 0 0 2px #1a1a1a,
+      0 0 0 4px #ff4444,
+      0 4px 8px rgba(0,0,0,0.4),
+      inset 0 2px 4px rgba(255,255,255,0.3),
+      0 0 25px rgba(255, 68, 68, 0.8);
+  }
+}
+
+/* 💥 ANIMACIONES DE DIVISIÓN */
+@keyframes pokeball-split-top-pro {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  20% {
+    transform: translateY(-5px) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-25px) rotate(-25deg) scale(0.9);
+    opacity: 0.8;
+  }
+  80% {
+    transform: translateY(-40px) rotate(-45deg) scale(0.7);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-60px) rotate(-60deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes pokeball-split-bottom-pro {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  20% {
+    transform: translateY(5px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(25px) rotate(25deg) scale(0.9);
+    opacity: 0.8;
+  }
+  80% {
+    transform: translateY(40px) rotate(45deg) scale(0.7);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(60px) rotate(60deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out-fast {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* 💫 EFECTOS DE EXPLOSIÓN CENTRAL */
+@keyframes central-explosion {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(1.2);
+    opacity: 0.9;
+  }
+  60% {
+    transform: scale(2);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* 🌊 ONDAS DE ENERGÍA */
+@keyframes energy-wave-expand {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(8);
+    opacity: 0;
+  }
+}
+
+/* ✨ PARTÍCULAS DE EMERGENCIA */
+@keyframes emergence-particle {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  30% {
+    transform: translate(calc(var(--end-x) * 0.3), calc(var(--end-y) * 0.3)) scale(1.2) rotate(180deg);
+    opacity: 0.8;
+  }
+  70% {
+    transform: translate(calc(var(--end-x) * 0.7), calc(var(--end-y) * 0.7)) scale(0.8) rotate(360deg);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(var(--end-x), var(--end-y)) scale(0.3) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+/* 🔆 RAYO DE LUZ PRINCIPAL */
+@keyframes main-light-beam {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  20% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.7;
+  }
+  80% {
+    transform: scale(2);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+} 

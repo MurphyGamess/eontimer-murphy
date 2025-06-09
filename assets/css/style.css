@@ -1,0 +1,173 @@
+/* 🎮 POKEMON FLOATING SYSTEM - Solo estilos necesarios para Pokémon flotantes */
+.pokemon-floater {
+  position: fixed !important;
+  z-index: 2000 !important;
+  pointer-events: auto !important;
+  width: 64px !important;
+  height: 64px !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-color: transparent !important;
+  opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.pokemon-floater:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  pointer-events: auto;
+}
+
+/* Animaciones de movimiento de Pokémon */
+@keyframes pokemon-walk-horizontal {
+  0% { transform: translateX(-80px) scaleX(1); }
+  100% { transform: translateX(calc(100vw + 80px)) scaleX(1); }
+}
+
+@keyframes pokemon-walk-horizontal-reverse {
+  0% { transform: translateX(calc(100vw + 80px)) scaleX(-1); }
+  100% { transform: translateX(-80px) scaleX(-1); }
+}
+
+@keyframes pokemon-float-vertical {
+  0% { transform: translateY(-80px); }
+  100% { transform: translateY(calc(100vh + 80px)); }
+}
+
+@keyframes pokemon-emerge-simple {
+  0% { 
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.2) rotate(180deg);
+    opacity: 1;
+  }
+  100% { 
+    transform: scale(1) rotate(360deg);
+    opacity: 0.8;
+  }
+}
+
+/* Clases de animación */
+.pokemon-walk-left {
+  animation: pokemon-walk-horizontal 15s linear infinite;
+}
+
+.pokemon-walk-right {
+  animation: pokemon-walk-horizontal-reverse 18s linear infinite;
+}
+
+.pokemon-float {
+  animation: pokemon-float-vertical 12s linear infinite;
+}
+
+.pokemon-emerge {
+  animation: pokemon-emerge-simple 2s ease-out;
+}
+
+/* Diferentes tamaños para variedad */
+.pokemon-small { width: 48px; height: 48px; }
+.pokemon-medium { width: 64px; height: 64px; }
+.pokemon-large { width: 80px; height: 80px; }
+
+/* Efectos especiales para Pokemon shiny */
+.pokemon-shiny {
+  filter: hue-rotate(60deg) saturate(1.5) brightness(1.2);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+.pokemon-shiny::after {
+  content: '✨';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 16px;
+  animation: sparkle 2s infinite;
+}
+
+/* Pokemon controls container */
+.pokemon-controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.pokemon-toggle-btn {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid #00d4ff;
+  background: linear-gradient(145deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.2));
+  backdrop-filter: blur(10px);
+  color: #00d4ff;
+  font-size: 22px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokemon-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  background: linear-gradient(145deg, rgba(0, 212, 255, 0.3), rgba(139, 92, 246, 0.3));
+}
+
+.pokemon-toggle-btn.disabled {
+  opacity: 0.5;
+  color: #666;
+  border-color: #666;
+}
+
+.pokeball-info-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid #ff6b35;
+  background: linear-gradient(145deg, rgba(255, 107, 53, 0.2), rgba(247, 147, 30, 0.2));
+  backdrop-filter: blur(10px);
+  color: #ff6b35;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokeball-info-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+  background: linear-gradient(145deg, rgba(255, 107, 53, 0.3), rgba(247, 147, 30, 0.3));
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .pokemon-floater {
+    width: 48px !important;
+    height: 48px !important;
+  }
+  .pokemon-small { width: 36px; height: 36px; }
+  .pokemon-medium { width: 48px; height: 48px; }
+  .pokemon-large { width: 60px; height: 60px; }
+  
+  .pokemon-controls {
+    bottom: 15px;
+    right: 15px;
+  }
+} 

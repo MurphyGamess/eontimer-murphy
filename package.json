@@ -1,0 +1,35 @@
+{
+  "name": "timer-murphy",
+  "version": "2.0.0",
+  "description": "Timer profesional para RNG Pokemon con sistema completo de Pokemon flotantes, 27 pokeballs animadas y efectos especiales",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "dist": "electron-builder --publish=never"
+  },
+  "build": {
+    "appId": "com.murphygames.timer",
+    "productName": "EonTimer Murphy",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^25.3.1",
+    "electron-builder": "^24.13.3"
+  },
+  "author": "MurphyGamess",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MurphyGamess/eontimer-murphy.git"
+  }
+}

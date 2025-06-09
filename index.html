@@ -1,0 +1,2827 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: https:; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:;" />
+    <title>MURPHYGAMES Timer</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/main.css" rel="stylesheet">
+    <link href="assets/css/components.css" rel="stylesheet">
+    <link href="assets/css/pokeball-effects.css" rel="stylesheet">
+    <link href="assets/css/sprite-fixes.css" rel="stylesheet">
+
+  </head>
+  <body class="text-light">
+
+    <!-- Navbar minimal solo con botón de ajustes en la esquina superior derecha -->
+    <nav class="position-absolute top-0 end-0 p-3 z-3">
+      <button id="settingsButton" title="Ajustes" data-bs-toggle="modal" data-bs-target="#settingsModal"
+              class="btn btn-outline-light btn-sm rounded-circle">
+        <i class="bi bi-gear-fill"></i>
+      </button>
+    </nav>
+
+    <div class="logo-container text-center mb-0">
+      <img src="" alt="Logo" id="navbarLogo" style="display: none;" />
+    </div>
+    <!-- Main Content -->
+    <div class="container">
+
+      <!-- Timer Principal - Siempre Visible -->
+      <div class="text-center mb-4 py-3 px-3 rounded shadow"
+          style="background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2);">
+        <h2 class="display-5 fw-bold text-light mb-1" id="mainTimer">5:000</h2>
+        <h5 class="text-info mb-2" id="subTimer">5:000</h5>
+        <div id="frameInfo" class="small text-warning mb-2"></div>
+      </div>
+
+      <!-- Dashboard Navigation -->
+      <div class="dashboard-nav">
+        <ul class="nav nav-pills nav-fill">
+          <li class="nav-item">
+            <button class="nav-link active" data-tab="timer"><i class="bi bi-controller me-2"></i>Timer & Config</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-tab="training"><i class="bi bi-bullseye me-2"></i>Entrenamiento</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-tab="tools"><i class="bi bi-calculator me-2"></i>Herramientas</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-tab="notes"><i class="bi bi-journal-text me-2"></i>Notas</button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        
+        <!-- Timer & Configuration Tab -->
+        <div id="timer-tab" class="tab-pane active">
+          <div class="row g-3">
+            
+            <!-- CPS Configuration Card -->
+            <div class="col-md-6">
+              <div class="card bg-dark border-primary">
+                <div class="card-header bg-primary bg-opacity-25">
+                  <h5 class="mb-0 text-primary"><i class="bi bi-controller me-2"></i>Configuración CPS</h5>
+                </div>
+                <div class="card-body">
+
+      <!-- Selección CPS -->
+      <div class="mb-3">
+        <label for="select-cps" class="form-label">Selecciona CPS</label>
+        <select id="select-cps" class="form-select form-select-sm">
+          <option value="60">60 (¿Emulador?)</option>
+          <option value="59.7275">GBA</option>
+          <option value="59.8261">DS GBA</option>
+          <option value="59.6555">DS</option>
+          <option value="62">Channel - Canal Reporte (NTSC)</option>
+          <option value="134">Channel - Canal Huevo en desierto (NTSC)</option>
+          <option value="123">Channel - Canal Huevo en estanque (NTSC)</option>
+          <option value="52">Channel - Canal Reporte (PAL)</option>
+          <option value="112">Channel - Canal Huevo en desierto (PAL)</option>
+          <option value="103">Channel - Canal Huevo en estanque (PAL)</option>
+          <option value="personalizado">Personalizado</option>
+        </select>
+      </div>
+
+                  <!-- Custom CPS & Calibration -->
+      <div class="row g-2">
+        <div class="col-6">
+          <label for="input-cps" class="form-label">CPS Personalizado</label>
+          <input type="text" id="input-cps" class="form-control form-control-sm" value="60" disabled />
+        </div>
+        <div class="col-6">
+                      <label for="calibration" class="form-label">Calibración</label>
+          <input type="number" id="calibration" class="form-control form-control-sm" value="0" />
+        </div>
+      </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- RNG Configuration Card -->
+            <div class="col-md-6">
+              <div class="card bg-dark border-success">
+                <div class="card-header bg-success bg-opacity-25">
+                  <h5 class="mb-0 text-success"><i class="bi bi-gear me-2"></i>Configuración RNG</h5>
+                </div>
+                <div class="card-body">
+                  
+                  <!-- Configuraciones Predeterminadas -->
+                  <div class="mb-3">
+                    <label for="preset-select" class="form-label">Configuraciones RNG</label>
+                    <div class="input-group input-group-sm">
+                      <select id="preset-select" class="form-select">
+                        <option value="">Seleccionar configuración...</option>
+                        <option value="gba_wild">GBA Wild</option>
+                        <option value="ds_wild">DS Wild</option>
+                        <option value="channel_egg">Channel Egg (NTSC)</option>
+                      </select>
+                      <button class="btn btn-outline-warning" type="button" id="edit-config" title="Editar configuración">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button class="btn btn-outline-danger" type="button" id="delete-config" title="Eliminar configuración">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Guardar/Editar Configuración -->
+                  <div class="mb-3" id="config-form">
+                    <div class="input-group input-group-sm">
+                      <input type="text" id="config-name" class="form-control" placeholder="Nombre de configuración">
+                      <button class="btn btn-outline-primary" type="button" id="save-config">Guardar</button>
+                      <button class="btn btn-outline-secondary" type="button" id="cancel-edit" style="display: none;">Cancelar</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Timer Controls Card -->
+            <div class="col-12">
+              <div class="card bg-dark border-warning">
+                <div class="card-header bg-warning bg-opacity-25">
+                  <h5 class="mb-0 text-warning"><i class="bi bi-stopwatch me-2"></i>Controles del Timer</h5>
+                </div>
+                <div class="card-body">
+                  
+                  <div class="row g-2 mb-3">
+                    <div class="col-md-4">
+                      <label for="preTimer" class="form-label">
+                        <i class="bi bi-clock me-2"></i>Pre-Timer
+                      </label>
+          <input type="number" id="preTimer" class="form-control form-control-sm" value="5000" />
+        </div>
+                    <div class="col-md-4">
+                      <label for="targetFrame" class="form-label">
+                        <i class="bi bi-bullseye me-2"></i>Target Frame
+                      </label>
+                      <input type="number" id="targetFrame" class="form-control form-control-sm" value="1000" />
+                    </div>
+                    <div class="col-md-4">
+                      <label for="frameHit" class="form-label">
+                        <i class="bi bi-crosshair me-2"></i>Frame Hit
+                      </label>
+                      <input type="number" id="frameHit" class="form-control form-control-sm" value="0" />
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div class="d-flex gap-2 mb-3">
+                    <button id="updateButton" class="btn btn-primary flex-fill">
+                      <i class="bi bi-arrow-clockwise me-2"></i>Update
+                    </button>
+                    <button id="startButton" class="btn btn-success flex-fill">
+                      <i class="bi bi-play-circle me-2"></i>Start
+                    </button>
+                  </div>
+
+
+
+
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Training Tab -->
+        <div id="training-tab" class="tab-pane" style="display: none;">
+          <div class="row g-3">
+            
+            <!-- Training Controls -->
+            <div class="col-md-6">
+              <div class="card bg-dark border-info">
+                <div class="card-header bg-info bg-opacity-25 d-flex justify-content-between align-items-center">
+                  <h5 class="mb-0 text-info"><i class="bi bi-bullseye me-2"></i>Modo Entrenamiento</h5>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="training-mode">
+                  </div>
+                </div>
+                <div class="card-body" id="training-section" style="display: none;">
+                  <button id="reset-training-btn" class="btn btn-outline-danger w-100">
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>Reiniciar Estadísticas
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Training Stats -->
+            <div class="col-md-6">
+              <div class="card bg-dark border-info">
+                <div class="card-header bg-info bg-opacity-25">
+                  <h5 class="mb-0 text-info"><i class="bi bi-bar-chart me-2"></i>Estadísticas</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row g-3 text-center">
+                    <div class="col-6">
+                      <h6 class="text-light">Precisión</h6>
+                      <div class="display-6 text-info mb-2" id="accuracy">0%</div>
+                      <small class="text-muted" id="attempts">Intentos: 0</small>
+        </div>
+        <div class="col-6">
+                      <h6 class="text-light">Mejor Racha</h6>
+                      <div class="display-6 text-warning mb-2" id="best-streak">0</div>
+                      <small class="text-muted" id="current-streak">Racha actual: 0</small>
+                    </div>
+                  </div>
+                  
+                  <div class="mt-3">
+                    <h6 class="text-light mb-2">Últimos Intentos</h6>
+                    <div class="progress" style="height: 25px;">
+                      <div class="progress-bar bg-success" id="hits-bar" style="width: 0%" title="Aciertos"></div>
+                      <div class="progress-bar bg-danger" id="misses-bar" style="width: 0%" title="Fallos"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+              <!-- Tools Tab -->
+        <div id="tools-tab" class="tab-pane" style="display: none;">
+          <div class="card bg-dark border-warning">
+            <div class="card-header bg-warning bg-opacity-25 d-flex justify-content-between align-items-center">
+              <h5 class="mb-0 text-warning"><i class="bi bi-calculator me-2"></i>Calculadora de Delay</h5>
+              <button class="btn btn-sm btn-outline-warning" id="calculate-delay">
+                <i class="bi bi-calculator me-2"></i>Calcular
+              </button>
+            </div>
+            <div class="card-body">
+              
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <label class="form-label text-light">Frame Objetivo</label>
+                  <input type="number" class="form-control form-control-sm" id="target-frame-delay">
+                </div>
+                <div class="col-6">
+                  <label class="form-label text-light">Frame Alcanzado</label>
+                  <input type="number" class="form-control form-control-sm" id="hit-frame-delay">
+                </div>
+              </div>
+              
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="text-light mb-0">Historial de Delays</h6>
+                <button class="btn btn-sm btn-outline-danger" id="clearHistoryBtn">
+                  <i class="bi bi-trash me-2"></i>Limpiar Historial
+                </button>
+      </div>
+
+              <div class="table-responsive">
+                <table class="table table-dark table-sm">
+                  <thead>
+                    <tr>
+                      <th>Método</th>
+                      <th>Delay</th>
+                      <th>Éxito</th>
+                    </tr>
+                  </thead>
+                  <tbody id="delay-history">
+                    <!-- El historial se agregará aquí dinámicamente -->
+                  </tbody>
+                </table>
+      </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes Tab -->
+        <div id="notes-tab" class="tab-pane" style="display: none;">
+          <div class="card bg-dark border-secondary">
+            <div class="card-header bg-secondary bg-opacity-25 d-flex justify-content-between align-items-center">
+              <h5 class="mb-0 text-secondary"><i class="bi bi-journal-text me-2"></i>Notas de RNG</h5>
+              <button class="btn btn-sm btn-outline-secondary" id="add-note">
+                <i class="bi bi-plus-lg me-2"></i>Agregar Nota
+              </button>
+            </div>
+            <div class="card-body">
+              <div id="notes-container">
+                <!-- Las notas se agregarán aquí dinámicamente -->
+              </div>
+              <!-- Template para nueva nota -->
+              <template id="note-template">
+                <div class="note-item mb-2 p-2 border border-secondary rounded">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <input type="text" class="form-control form-control-sm bg-dark text-light border-0 note-title" placeholder="Título de la nota">
+                    <button class="btn btn-sm btn-outline-danger ms-2 delete-note">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                  <textarea class="form-control form-control-sm bg-dark text-light note-content" rows="2" placeholder="Contenido de la nota"></textarea>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+      
+
+
+<!-- Settings Modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content text-white border-light border-3 shadow-lg" style="background-color: #1a1a1a !important;">
+      <div class="modal-header border-0 bg-gradient" style="background: linear-gradient(145deg, #667eea, #764ba2);">
+        <h5 class="modal-title" id="settingsModalLabel"><i class="bi bi-gear me-2"></i>Configuración del Sistema</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body p-4" style="background-color: #2a2a2a !important;">
+        <div class="row g-3">
+
+          <!-- Logo Configuration Card -->
+          <div class="col-md-6">
+            <div class="card border-info border-2" style="background-color: #404040 !important;">
+              <div class="card-header bg-info border-0">
+                <h6 class="mb-0 text-white fw-bold"><i class="bi bi-tag me-2"></i>Configuración de Logo</h6>
+              </div>
+              <div class="card-body p-3" style="background-color: #333333 !important;">
+                
+                <!-- Logo Position -->
+                <div class="mb-3">
+                  <label for="logoTopInput" class="form-label">Posición vertical</label>
+                  <input type="number" class="form-control form-control-sm" id="logoTopInput" placeholder="Ej: -40">
+                  <small class="text-light">Valores negativos suben el logo</small>
+                </div>
+
+                <!-- Logo Selector -->
+                <div class="mb-3">
+                  <label for="logoSelect" class="form-label">Selecciona Logo</label>
+                  <select id="logoSelect" class="form-select form-select-sm"></select>
+                </div>
+
+                <!-- Upload Logo -->
+                <div>
+                  <label for="logoUpload" class="form-label">Subir nuevo logo</label>
+                  <input type="file" id="logoUpload" accept="image/*" class="form-control form-control-sm" />
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Background Configuration Card -->
+          <div class="col-md-6">
+            <div class="card border-warning border-2" style="background-color: #404040 !important;">
+              <div class="card-header bg-warning border-0">
+                <h6 class="mb-0 text-white fw-bold"><i class="bi bi-image me-2"></i>Configuración de Fondo</h6>
+              </div>
+              <div class="card-body p-3" style="background-color: #333333 !important;">
+                
+                <!-- Background Selector -->
+                <div class="mb-3">
+                  <label for="backgroundSelect" class="form-label">Selecciona Fondo</label>
+                  <select id="backgroundSelect" class="form-select form-select-sm"></select>
+                </div>
+
+                <!-- Upload Background -->
+                <div>
+                  <label for="backgroundUpload" class="form-label">Subir nuevo fondo</label>
+                  <input type="file" id="backgroundUpload" accept="image/*" class="form-control form-control-sm" />
+                </div>
+
+              </div>
+          </div>
+        </div>
+
+          <!-- Logo Preview Card -->
+          <div class="col-12">
+            <div class="card border-warning border-2" style="background-color: #404040 !important;">
+              <div class="card-header bg-warning border-0">
+                <h6 class="mb-0 text-white fw-bold"><i class="bi bi-eye me-2"></i>Vista Previa del Logo</h6>
+              </div>
+              <div class="card-body p-3" style="background-color: #333333 !important;">
+                <div class="border rounded bg-light position-relative p-3" style="height: 180px; overflow: hidden;">
+            <img id="logoPreviewImage"
+              src=""
+              alt="Logo preview"
+                    style="position: relative; left: 50%; transform: translateX(-50%); top: 30px; max-height: 100px; max-width: 100%; transition: top 0.2s ease;">
+            <small class="text-muted position-absolute bottom-0 start-50 translate-middle-x pb-1">
+              Vista previa de la posición del logo
+            </small>
+          </div>
+        </div>
+          </div>
+          <!-- Pokemon System Configuration Card -->
+          <div class="col-12">
+            <div class="card border-success border-2" style="background-color: #404040 !important;">
+              <div class="card-header bg-success border-0">
+                <h6 class="mb-0 text-white fw-bold"><i class="bi bi-controller me-2"></i>Sistema de Pokémon</h6>
+        </div>
+              <div class="card-body p-3" style="background-color: #333333 !important;">
+                <div class="row g-3">
+                  
+                  <!-- Pokemon Toggle -->
+                  <div class="col-md-6">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div>
+                        <h6 class="mb-1 text-white fw-bold">🎮 Sistema Pokémon</h6>
+                        <small class="text-light">Pausar/reanudar sistema (conserva Pokemon)</small>
+                      </div>
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="pokemonToggleSwitch" checked>
+                      </div>
+                    </div>
+        </div>
+
+                  <!-- Pokeball Controls -->
+                  <div class="col-md-6">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div>
+                        <h6 class="mb-1 text-white fw-bold">🎾 Controles Pokeballs</h6>
+                        <small class="text-light">Mostrar y gestionar pokeballs</small>
+      </div>
+                      <div>
+                        <button id="showAllPokeballsFrame1" class="btn btn-warning btn-sm">
+                          📜 Todas
+         </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Pokemon Stats -->
+                  <div class="col-12">
+                    <div class="border-top pt-3">
+                      <div class="row text-center">
+                        <div class="col-3">
+                          <div class="text-success fw-bold" id="activePokemonCount">0</div>
+                          <small class="text-light">Activos</small>
+                        </div>
+                        <div class="col-3">
+                          <div class="text-warning fw-bold" id="shinyPokemonCount">0</div>
+                          <small class="text-light">Shiny</small>
+                        </div>
+                        <div class="col-3">
+                          <div class="text-danger fw-bold" id="legendaryPokemonCount">0</div>
+                          <small class="text-light">Legendarios</small>
+                        </div>
+                        <div class="col-3">
+                          <div class="text-info fw-bold" id="totalPokemonSpawned">0</div>
+                          <small class="text-light">Total Spawned</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+      </div>
+      <div class="modal-footer border-0" style="background-color: #1a1a1a !important;">
+                 <button type="button" id="saveSettingsButton" class="btn btn-primary w-100">
+           <i class="bi bi-save me-2"></i>Guardar Configuración
+  </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Pokeball Info Modal -->
+<div class="modal fade" id="pokeballModal" tabindex="-1" aria-labelledby="pokeballModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-dark text-white border-secondary">
+      <div class="modal-header border-0 bg-gradient" style="background: linear-gradient(145deg, #667eea, #764ba2);">
+        <h5 class="modal-title" id="pokeballModalLabel">🎾 Tipos de Pokeballs y sus Efectos</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body p-3">
+        <!-- Controles del modal -->
+        <div class="mb-3 text-center">
+          <button id="showAllPokeballsFrame1" class="btn btn-warning me-2">
+            📜 Mostrar Todas (Frame 1)
+          </button>
+          <button id="clearPokeballDisplay" class="btn btn-secondary">
+            🧹 Limpiar Pantalla
+          </button>
+        </div>
+        
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="card bg-dark border-warning text-center">
+              <div class="card-body">
+                <div class="mb-2 text-white fw-bold">🔴 Pokeball</div>
+                <small class="text-light">Pokémon normales</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-dark border-info text-center">
+              <div class="card-body">
+                <div class="mb-2 text-white fw-bold">🔵 Great Ball</div>
+                <small class="text-light">Pokémon poco comunes</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-dark border-warning text-center">
+              <div class="card-body">
+                <div class="mb-2 text-white fw-bold">⚫ Ultra Ball</div>
+                <small class="text-light">Pokémon raros</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-dark border-danger text-center">
+              <div class="card-body">
+                <div class="mb-2 text-white fw-bold">🟣 Master Ball</div>
+                <small class="text-light">Shiny y Legendarios</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-dark border-light text-center">
+              <div class="card-body">
+                <div class="mb-2 text-white fw-bold">⚪ Premier Ball</div>
+                <small class="text-light">5% chance especial</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-dark border-success text-center">
+              <div class="card-body">
+                <div class="mb-2 text-white fw-bold">⚡ Quick Ball</div>
+                <small class="text-light">Primeros 10 segundos</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- CSS para Pokemon translúcidos cuando hay modales -->
+    <style>
+      /* Pokemon translúcidos cuando hay modal abierto o durante acciones */
+      body.modal-open .pokemon-sprite,
+      body.modal-open .pokeball-effect,
+      body.modal-open [data-pokemon-id],
+      body.action-in-progress .pokemon-sprite,
+      body.action-in-progress .pokeball-effect,
+      body.action-in-progress [data-pokemon-id] {
+        opacity: 0.3 !important;
+        transition: opacity 0.3s ease;
+      }
+      
+      /* Asegurar que los textos SHINY/LEGENDARY también se pongan translúcidos */
+      body.modal-open div[style*="position: fixed"][style*="z-index: 1000000"],
+      body.action-in-progress div[style*="position: fixed"][style*="z-index: 1000000"] {
+        opacity: 0.3 !important;
+        transition: opacity 0.3s ease;
+      }
+    </style>
+
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/renderer.js"></script>
+    <script src="assets/js/pokeball-effects.js"></script>
+    <script src="assets/js/pokemon-floaters.js"></script>
+
+    
+    <!-- Dashboard Tab Navigation Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+             // 🌟 AUTO-INICIO DEL SISTEMA DE POKÉMON DESPUÉS DE 3 SEGUNDOS
+       setTimeout(() => {
+         console.log('🎾 Iniciando sistema automático de pokémon...');
+         pokemonManager.startAutoSpawning();
+         pokemonManager.detectActions(); // Inicializar detección de acciones
+       }, 3000);
+
+       // 🎮 CONFIGURAR CONTROLES DE POKEMON EN MODAL DE AJUSTES
+       const pokemonToggleSwitch = document.getElementById('pokemonToggleSwitch');
+       if (pokemonToggleSwitch) {
+         pokemonToggleSwitch.addEventListener('change', function() {
+           if (this.checked) {
+             console.log('🎮 ▶️ REANUDANDO sistema de Pokemon...');
+             pokemonManager.resumeSystem();
+           } else {
+             console.log('🎮 ⏸️ PAUSANDO sistema de Pokemon...');
+             pokemonManager.pauseSystem();
+           }
+         });
+       }
+
+       // 📊 ACTUALIZAR ESTADÍSTICAS EN TIEMPO REAL
+       function updatePokemonStats() {
+         if (typeof pokemonManager !== 'undefined' && pokemonManager.activePokemon) {
+           const activePokemon = pokemonManager.activePokemon;
+           const activeCount = activePokemon.length;
+           const shinyCount = activePokemon.filter(p => p.isShiny).length;
+           const legendaryCount = activePokemon.filter(p => p.isLegendary).length;
+           const totalSpawned = pokemonManager.totalSpawned || 0;
+
+           document.getElementById('activePokemonCount').textContent = activeCount;
+           document.getElementById('shinyPokemonCount').textContent = shinyCount;
+           document.getElementById('legendaryPokemonCount').textContent = legendaryCount;
+           document.getElementById('totalPokemonSpawned').textContent = totalSpawned;
+         }
+       }
+
+       // Actualizar estadísticas cada 2 segundos
+       setInterval(updatePokemonStats, 2000);
+
+       // 🎾 FUNCIONALIDAD BOTONES DEL MODAL DE POKEBALLS
+       document.getElementById('showAllPokeballsFrame1')?.addEventListener('click', function() {
+         console.log('📜 Mostrando todas las pokeballs en Frame 1...');
+         
+         // Limpiar pokeballs anteriores
+         document.querySelectorAll('.pokeball-demo').forEach(el => el.remove());
+         
+         // Agregar clase para pokemon translúcidos
+         document.body.classList.add('action-in-progress');
+         
+         // Crear contenedor centrado para las pokeballs
+         const container = document.createElement('div');
+         container.className = 'pokeball-demo pokeball-grid-container';
+         container.style.cssText = `
+           position: fixed;
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%);
+           background: rgba(0, 0, 0, 0.9);
+           border: 3px solid #ffd700;
+           border-radius: 15px;
+           padding: 30px;
+           z-index: 1000001;
+           box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+           backdrop-filter: blur(10px);
+         `;
+         
+         // Título del contenedor
+         const title = document.createElement('div');
+         title.className = 'pokeball-demo';
+         title.textContent = '🎾 TODAS LAS POKEBALLS (Frame 1) 🎾';
+         title.style.cssText = `
+           text-align: center;
+           color: #ffd700;
+           font-size: 20px;
+           font-weight: bold;
+           margin-bottom: 20px;
+           text-shadow: 2px 2px 4px black;
+         `;
+         container.appendChild(title);
+         
+         // Grid de pokeballs
+         const grid = document.createElement('div');
+         grid.className = 'pokeball-demo';
+         grid.style.cssText = `
+           display: grid;
+           grid-template-columns: repeat(9, 1fr);
+           gap: 15px;
+           max-width: 800px;
+         `;
+         
+         pokeballDatabaseMain.forEach((pokeball, index) => {
+           const pokeballItem = document.createElement('div');
+           pokeballItem.className = 'pokeball-demo pokeball-item';
+           pokeballItem.style.cssText = `
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             padding: 8px;
+             border: 1px solid rgba(255,255,255,0.2);
+             border-radius: 8px;
+             background: rgba(255,255,255,0.05);
+             transition: all 0.3s ease;
+           `;
+           
+           const pokeballSprite = document.createElement('div');
+           pokeballSprite.style.cssText = `
+             width: 41px;
+             height: 40px;
+             background-image: url('resources/sprites/pokeball-sprites-oficial.png');
+             background-size: 1106px 680px;
+             background-position: ${pokeball.xPos}px 0px;
+             background-repeat: no-repeat;
+             image-rendering: pixelated;
+             image-rendering: -moz-crisp-edges;
+             image-rendering: crisp-edges;
+             margin-bottom: 5px;
+           `;
+           
+           const nameLabel = document.createElement('div');
+           nameLabel.textContent = pokeball.name;
+           nameLabel.style.cssText = `
+             font-size: 10px;
+             color: white;
+             text-shadow: 1px 1px 2px black;
+             text-align: center;
+             line-height: 1.2;
+             max-width: 60px;
+             word-wrap: break-word;
+           `;
+           
+           pokeballItem.appendChild(pokeballSprite);
+           pokeballItem.appendChild(nameLabel);
+           grid.appendChild(pokeballItem);
+           
+           // Efecto hover
+           pokeballItem.addEventListener('mouseenter', function() {
+             this.style.background = 'rgba(255,255,255,0.15)';
+             this.style.borderColor = 'rgba(255,215,0,0.8)';
+             this.style.transform = 'scale(1.1)';
+           });
+           
+           pokeballItem.addEventListener('mouseleave', function() {
+             this.style.background = 'rgba(255,255,255,0.05)';
+             this.style.borderColor = 'rgba(255,255,255,0.2)';
+             this.style.transform = 'scale(1)';
+           });
+           
+           // Click para mostrar animación completa de la pokeball
+           pokeballItem.addEventListener('click', function() {
+             console.log(`🎾 Testing ${pokeball.name} animation...`);
+             
+             // Cerrar el grid
+             document.querySelectorAll('.pokeball-demo').forEach(el => el.remove());
+             document.body.classList.remove('action-in-progress');
+             
+             // Posición central para la demostración
+             const position = {
+               x: window.innerWidth / 2,
+               y: window.innerHeight / 2
+             };
+             
+             // Ejecutar secuencia completa de pokeball con Pikachu de ejemplo
+             createFrameByFramePokeballSequenceMain(pokeball.id, position, 'Pikachu', false);
+           });
+         });
+         
+         container.appendChild(grid);
+         
+         // Instrucciones y botón de cerrar
+         const instructions = document.createElement('div');
+         instructions.className = 'pokeball-demo';
+         instructions.textContent = '💡 Haz click en cualquier pokeball para ver su animación';
+         instructions.style.cssText = `
+           text-align: center;
+           color: #87ceeb;
+           font-size: 14px;
+           margin-top: 15px;
+           margin-bottom: 10px;
+           font-style: italic;
+         `;
+         container.appendChild(instructions);
+         
+         const closeBtn = document.createElement('button');
+         closeBtn.className = 'pokeball-demo';
+         closeBtn.textContent = '❌ Cerrar Grid';
+         closeBtn.style.cssText = `
+           margin-top: 10px;
+           padding: 10px 20px;
+           background: #dc3545;
+           color: white;
+           border: none;
+           border-radius: 5px;
+           cursor: pointer;
+           font-weight: bold;
+           display: block;
+           margin-left: auto;
+           margin-right: auto;
+           transition: background-color 0.3s ease;
+         `;
+         
+         closeBtn.addEventListener('mouseenter', () => {
+           closeBtn.style.backgroundColor = '#c82333';
+         });
+         
+         closeBtn.addEventListener('mouseleave', () => {
+           closeBtn.style.backgroundColor = '#dc3545';
+         });
+         
+         closeBtn.addEventListener('click', () => {
+           document.querySelectorAll('.pokeball-demo').forEach(el => el.remove());
+           document.body.classList.remove('action-in-progress');
+         });
+         
+         container.appendChild(closeBtn);
+         document.body.appendChild(container);
+         
+         console.log('✅ Todas las pokeballs mostradas en grid centrado');
+       });
+
+
+
+       // 📋 MOSTRAR FUNCIONES DEBUG DISPONIBLES
+       console.log(`
+🎾 ======= SISTEMA DE POKÉMON AVANZADO =======
+🌟 Funciones disponibles en consola:
+• debugPokemonSystem() - Ver estado actual
+• forceSpawnPokemon() - Forzar spawn
+• clearAllPokemon() - Limpiar todo
+• startPokemonSystem() - Iniciar sistema
+• resetPokemonSystem() - Reset completo
+
+🎮 Características FINALES:
+✨ 20% probabilidad Shiny
+🎾 27 pokeballs con efectos personalizados
+📊 EXACTAMENTE 6 pokémon en posiciones aleatorias
+🎬 Secuencia correcta: Pokeball(1→11) → Pokémon sale → Pokeball(11→1) → 10s → Pokeball regreso(1→11) → Captura(11→1)
+🎮 Cada pokémon registra su pokeball específica
+⏰ Sin cuenta regresiva - Sistema continuo
+
+🚀 El sistema se iniciará en 3 segundos...
+============================================
+       `);
+      // Tab navigation functionality
+      const tabButtons = document.querySelectorAll('.nav-link[data-tab]');
+      const tabPanes = document.querySelectorAll('.tab-pane');
+      
+      tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const targetTab = this.getAttribute('data-tab');
+          
+          // Remove active class from all buttons and panes
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabPanes.forEach(pane => {
+            pane.classList.remove('active');
+            pane.style.display = 'none';
+          });
+          
+          // Add active class to clicked button and corresponding pane
+          this.classList.add('active');
+          const targetPane = document.getElementById(targetTab + '-tab');
+          if (targetPane) {
+            targetPane.classList.add('active');
+            targetPane.style.display = 'block';
+          }
+        });
+      });
+
+      // 🎾 POKEBALL DATABASE - Las 27 Pokeballs Oficiales (copiado del test que funciona)
+      const pokeballDatabase = [
+        { id: 'pokeball', name: 'Poké Ball', description: 'Pokémon normales', xPos: 0, color: '#ff4444' },
+        { id: 'greatball', name: 'Great Ball', description: 'Pokémon poco comunes', xPos: -41, color: '#4488ff' },
+        { id: 'safariball', name: 'Safari Ball', description: 'Zona Safari', xPos: -82, color: '#99cc33' },
+        { id: 'ultraball', name: 'Ultra Ball', description: 'Pokémon raros', xPos: -123, color: '#666666' },
+        { id: 'masterball', name: 'Master Ball', description: 'Legendarios y Shiny', xPos: -164, color: '#8844ff' },
+        { id: 'premierball', name: 'Premier Ball', description: 'Pokémon especiales', xPos: -205, color: '#ffffff' },
+        { id: 'repeatball', name: 'Repeat Ball', description: 'Pokémon ya capturados', xPos: -246, color: '#ffaa00' },
+        { id: 'timerball', name: 'Timer Ball', description: 'Aumenta con tiempo', xPos: -287, color: '#888888' },
+        { id: 'nestball', name: 'Nest Ball', description: 'Pokémon de nivel bajo', xPos: -328, color: '#88aa00' },
+        { id: 'netball', name: 'Net Ball', description: 'Tipos Water/Bug', xPos: -369, color: '#44aacc' },
+        { id: 'diveball', name: 'Dive Ball', description: 'Pokémon submarinos', xPos: -410, color: '#0088cc' },
+        { id: 'luxuryball', name: 'Luxury Ball', description: 'Aumenta amistad', xPos: -451, color: '#cc9900' },
+        { id: 'healball', name: 'Heal Ball', description: 'Cura al capturar', xPos: -492, color: '#ff88aa' },
+        { id: 'quickball', name: 'Quick Ball', description: 'Capturas rápidas', xPos: -533, color: '#44ffff' },
+        { id: 'duskball', name: 'Dusk Ball', description: 'Tipos Dark/Ghost', xPos: -574, color: '#446644' },
+        { id: 'cherishball', name: 'Cherish Ball', description: 'Eventos especiales', xPos: -615, color: '#ff4488' },
+        { id: 'fastball', name: 'Fast Ball', description: 'Pokémon rápidos', xPos: -656, color: '#ffcc00' },
+        { id: 'levelball', name: 'Level Ball', description: 'Pokémon de menor nivel', xPos: -697, color: '#ff6600' },
+        { id: 'lureball', name: 'Lure Ball', description: 'Pokémon pescados', xPos: -738, color: '#0066cc' },
+        { id: 'heavyball', name: 'Heavy Ball', description: 'Pokémon pesados', xPos: -779, color: '#666666' },
+        { id: 'loveball', name: 'Love Ball', description: 'Género opuesto', xPos: -820, color: '#ff66cc' },
+        { id: 'friendball', name: 'Friend Ball', description: 'Aumenta amistad inicial', xPos: -861, color: '#66cc66' },
+        { id: 'moonball', name: 'Moon Ball', description: 'Evolución por piedra lunar', xPos: -902, color: '#6666cc' },
+        { id: 'sportball', name: 'Sport Ball', description: 'Concurso de captura', xPos: -943, color: '#cc6600' },
+        { id: 'dreamball', name: 'Dream Ball', description: 'Mundo de los sueños', xPos: -984, color: '#ff88cc' },
+        { id: 'beastball', name: 'Beast Ball', description: 'Ultra Entes', xPos: -1025, color: '#4444ff' },
+        { id: 'strangeball', name: 'Strange Ball', description: 'Leyendas Arceus', xPos: -1066, color: '#888844' }
+      ];
+
+      // 🎬 FUNCIÓN PRINCIPAL PARA PROBAR POKEBALLS (del test que funciona)
+      window.testPokeballMain = function(ballType) {
+        if (ballType === 'random') {
+          const randomBall = pokeballDatabase[Math.floor(Math.random() * pokeballDatabase.length)];
+          ballType = randomBall.id;
+        }
+        
+        const pokeballData = pokeballDatabase.find(p => p.id === ballType);
+        if (!pokeballData) {
+          console.error(`❌ Pokeball type '${ballType}' not found!`);
+          return;
+        }
+        
+        console.log(`🧪 Testing ${pokeballData.name} with frame-by-frame animation`);
+        
+        const position = {
+          x: window.innerWidth / 2,
+          y: window.innerHeight / 2
+        };
+        
+        createFrameByFramePokeballSequence(ballType, position, 'Pikachu', false);
+      };
+
+      // 🎬 SECUENCIA COMPLETA CON ANIMACIÓN FRAME POR FRAME (del test que funciona)
+      function createFrameByFramePokeballSequence(ballType, position, pokemonName, isShiny) {
+        const pokeballData = pokeballDatabase.find(p => p.id === ballType);
+        if (!pokeballData) {
+          console.error(`❌ Pokeball type '${ballType}' not found!`);
+          return;
+        }
+        
+        console.log(`🎬 Starting synchronized fall + opening for ${pokeballData.name}`);
+        
+        // CREAR SPRITE INICIAL (FRAME 1 - CERRADA) - POSICIONAMIENTO CORREGIDO
+        const sprite = document.createElement('div');
+        sprite.className = `pokeball-sprite-animated sprite-${ballType}`;
+        sprite.style.cssText = `
+          position: fixed;
+          left: ${position.x - 20.5}px;
+          top: ${position.y - 150}px;
+          width: 41px;
+          height: 40px;
+          background-image: url('resources/sprites/pokeball-sprites-oficial.png');
+          background-size: 1106px 680px;
+          background-position: ${pokeballData.xPos}px 0px;
+          background-repeat: no-repeat;
+          z-index: 999999;
+          pointer-events: none;
+          image-rendering: pixelated;
+          image-rendering: -moz-crisp-edges;
+          image-rendering: crisp-edges;
+          transform-origin: center center;
+        `;
+        
+        document.body.appendChild(sprite);
+        
+        // SECUENCIA COMPLETA: CAÍDA + APERTURA + EFECTOS + CIERRE
+        animateFallWithFramesMain(sprite, pokeballData, position, () => {
+          // Efectos especiales según el tipo
+          createPokeballOpenEffectsMain(ballType, position, pokemonName, isShiny);
+          
+          setTimeout(() => {
+            console.log('🐾 Pokémon emerges!');
+            showPokemonMessageMain(pokemonName, isShiny);
+            
+            setTimeout(() => {
+              // Animación de cierre (Frame 11→1)
+              animateFrameByFrameMain(sprite, pokeballData, 11, 1, 60, () => {
+                sprite.remove();
+                console.log('✅ Pokeball sequence completed');
+              });
+            }, 2000);
+          }, 1000);
+        });
+      }
+
+      // Sistema mejorado de efectos de pokébolas
+      function createMasterBallEffect(position) {
+        console.log('🌟 Creating Master Ball effect with stars!');
+        
+        // Crear pokéball con sprite oficial
+        const pokeball = document.createElement('div');
+        pokeball.className = 'master ball pokeball-sprite-animated';
+        pokeball.style.cssText = `
+          position: fixed;
+          left: ${position.x - 20}px;
+          top: ${position.y - 200}px;
+          width: 41px;
+          height: 40px;
+          background-image: url('resources/sprites/pokeball-sprites-oficial.png');
+          background-size: 1106px 680px;
+          background-position: calc(41px * -4) 0px;
+          background-repeat: no-repeat;
+          z-index: 1000;
+          pointer-events: none;
+          image-rendering: pixelated;
+        `;
+        document.body.appendChild(pokeball);
+
+        // Animación de caída con apertura
+        animateFallWithFrames(pokeball, position, 4, () => {
+          // Efectos especiales de Master Ball
+          createMasterBallStars(position);
+          createGoldenAura(position);
+          createShinySparkles(position);
+          
+          // Limpiar pokéball después de 3 segundos
+          setTimeout(() => {
+            if (pokeball.parentNode) {
+              pokeball.remove();
+            }
+          }, 3000);
+        });
+      }
+
+      function createMasterBallStars(position) {
+        // 15 estrellas doradas en patrón circular
+        for (let i = 0; i < 15; i++) {
+          const star = document.createElement('div');
+          const angle = (i / 15) * 360;
+          const distance = 50 + Math.random() * 30;
+          
+          star.innerHTML = '✦';
+          star.style.cssText = `
+            position: fixed;
+            left: ${position.x}px;
+            top: ${position.y}px;
+            color: #FFD700;
+            font-size: ${16 + Math.random() * 8}px;
+            font-weight: bold;
+            z-index: 999;
+            pointer-events: none;
+            text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700;
+            animation: masterBallStar 2s ease-out forwards;
+            transform-origin: center;
+            --star-angle: ${angle}deg;
+            --star-distance: ${distance}px;
+          `;
+          
+          document.body.appendChild(star);
+          
+          setTimeout(() => star.remove(), 2000);
+        }
+      }
+
+      function createGoldenAura(position) {
+        const aura = document.createElement('div');
+        aura.style.cssText = `
+          position: fixed; 
+          left: ${position.x - 60}px;
+          top: ${position.y - 60}px;
+          width: 120px;
+          height: 120px;
+          background: radial-gradient(circle, 
+            rgba(255, 215, 0, 0.4) 0%, 
+            rgba(138, 43, 226, 0.3) 50%, 
+            transparent 70%);
+          border-radius: 50%;
+          z-index: 998;
+          pointer-events: none;
+          animation: goldenAuraPulse 1.5s ease-in-out;
+        `;
+        document.body.appendChild(aura);
+        setTimeout(() => aura.remove(), 1500);
+      }
+
+      function createShinySparkles(position) {
+        // 25 partículas brillantes
+        for (let i = 0; i < 25; i++) {
+          const sparkle = document.createElement('div');
+          sparkle.innerHTML = '✨';
+          sparkle.style.cssText = `
+            position: fixed;
+            left: ${position.x + (Math.random() - 0.5) * 200}px;
+            top: ${position.y + (Math.random() - 0.5) * 200}px;
+            color: ${Math.random() > 0.5 ? '#FFD700' : '#8A2BE2'};
+            font-size: ${12 + Math.random() * 6}px;
+            z-index: 999;
+            pointer-events: none;
+            animation: shinySparkle ${1 + Math.random()}s ease-out forwards;
+          `;
+          document.body.appendChild(sparkle);
+          setTimeout(() => sparkle.remove(), 2000);
+        }
+      }
+
+      function animateFallWithFrames(pokeball, targetPos, ballColumn, onComplete) {
+        const startTime = performance.now();
+        const fallDuration = 1500; // 1.5 segundos
+        const totalFrames = 11;
+        
+        function animate(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / fallDuration, 1);
+          const frame = Math.floor(progress * (totalFrames - 1));
+          
+          // Actualizar posición Y (caída con easing)
+          const easeProgress = 1 - Math.pow(1 - progress, 3);
+          const currentY = targetPos.y - 200 + (200 * easeProgress);
+          pokeball.style.top = currentY + 'px';
+          
+          // Actualizar frame de apertura
+          const yPos = frame * -40;
+          pokeball.style.backgroundPosition = `calc(41px * -${ballColumn}) ${yPos}px`;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            // Pokéball completamente abierta, activar efectos
+            setTimeout(() => {
+              // Animación de cierre (frames 11 -> 1)
+              let frame = 10;
+              const closeInterval = setInterval(() => {
+                const yPos = frame * -40;
+                pokeball.style.backgroundPosition = `calc(41px * -${ballColumn}) ${yPos}px`;
+                frame--;
+                if (frame < 0) {
+                  clearInterval(closeInterval);
+                  if (onComplete) onComplete();
+                }
+              }, 100);
+            }, 500);
+            
+            if (onComplete) onComplete();
+          }
+        }
+        
+        requestAnimationFrame(animate);
+      }
+
+      // 🎾 POKEBALL DATABASE - Las 27 Pokeballs Oficiales
+      const pokeballDatabaseMain = [
+        { id: 'pokeball', name: 'Poké Ball', xPos: 0, color: '#ff4444' },
+        { id: 'greatball', name: 'Great Ball', xPos: -41, color: '#4488ff' },
+        { id: 'safariball', name: 'Safari Ball', xPos: -82, color: '#99cc33' },
+        { id: 'ultraball', name: 'Ultra Ball', xPos: -123, color: '#666666' },
+        { id: 'masterball', name: 'Master Ball', xPos: -164, color: '#8844ff' },
+        { id: 'premierball', name: 'Premier Ball', xPos: -205, color: '#ffffff' },
+        { id: 'repeatball', name: 'Repeat Ball', xPos: -246, color: '#ffaa00' },
+        { id: 'timerball', name: 'Timer Ball', xPos: -287, color: '#888888' },
+        { id: 'nestball', name: 'Nest Ball', xPos: -328, color: '#88aa00' },
+        { id: 'netball', name: 'Net Ball', xPos: -369, color: '#44aacc' },
+        { id: 'diveball', name: 'Dive Ball', xPos: -410, color: '#0088cc' },
+        { id: 'luxuryball', name: 'Luxury Ball', xPos: -451, color: '#cc9900' },
+        { id: 'healball', name: 'Heal Ball', xPos: -492, color: '#ff88aa' },
+        { id: 'quickball', name: 'Quick Ball', xPos: -533, color: '#44ffff' },
+        { id: 'duskball', name: 'Dusk Ball', xPos: -574, color: '#446644' },
+        { id: 'cherishball', name: 'Cherish Ball', xPos: -615, color: '#ff4488' },
+        { id: 'fastball', name: 'Fast Ball', xPos: -656, color: '#ffcc00' },
+        { id: 'levelball', name: 'Level Ball', xPos: -697, color: '#ff6600' },
+        { id: 'lureball', name: 'Lure Ball', xPos: -738, color: '#0066cc' },
+        { id: 'heavyball', name: 'Heavy Ball', xPos: -779, color: '#666666' },
+        { id: 'loveball', name: 'Love Ball', xPos: -820, color: '#ff66cc' },
+        { id: 'friendball', name: 'Friend Ball', xPos: -861, color: '#66cc66' },
+        { id: 'moonball', name: 'Moon Ball', xPos: -902, color: '#6666cc' },
+        { id: 'sportball', name: 'Sport Ball', xPos: -943, color: '#cc6600' },
+        { id: 'dreamball', name: 'Dream Ball', xPos: -984, color: '#ff88cc' },
+        { id: 'beastball', name: 'Beast Ball', xPos: -1025, color: '#4444ff' },
+        { id: 'strangeball', name: 'Strange Ball', xPos: -1066, color: '#888844' }
+      ];
+
+      // 🌟 SISTEMA AVANZADO DE EFECTOS MASTER BALL Y SHINY PERSONALIZADO
+      const advancedEffectsMain = {
+        createMasterBallStarsEffect(position) {
+          this.createMasterBallBase(position);
+          this.createGoldenStars(position);
+          this.createPurpleAura(position);
+          this.createSparkleRain(position);
+        },
+        
+        createShinyMasterBallEffect(position, pokemonName) {
+          this.createMasterBallStarsEffect(position);
+          this.createShinyExplosion(position);
+          setTimeout(() => {
+            this.createShinyText(pokemonName);
+          }, 500);
+        },
+        
+        createMasterBallBase(position) {
+          const centralGlow = document.createElement('div');
+          centralGlow.style.cssText = `
+            position: fixed;
+            left: ${position.x - 60}px;
+            top: ${position.y - 60}px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, 
+              #9932CC88 0%, 
+              #8844ff66 30%, 
+              #FFD70044 60%, 
+              transparent 100%);
+            border-radius: 50%;
+            z-index: 999998;
+            pointer-events: none;
+            animation: masterBallPulse 2s ease-out forwards;
+          `;
+          document.body.appendChild(centralGlow);
+          setTimeout(() => centralGlow.remove(), 2000);
+        },
+        
+        createGoldenStars(position) {
+          for(let i = 0; i < 15; i++) {
+            setTimeout(() => {
+              const star = document.createElement('div');
+              const angle = (i * 24) + Math.random() * 15;
+              const distance = 80 + Math.random() * 100;
+              const size = 8 + Math.random() * 12;
+              
+              star.innerHTML = '★';
+              star.style.cssText = `
+                position: fixed;
+                left: ${position.x + Math.cos(angle * Math.PI / 180) * distance}px;
+                top: ${position.y + Math.sin(angle * Math.PI / 180) * distance}px;
+                font-size: ${size}px;
+                color: #FFD700;
+                z-index: 999999;
+                pointer-events: none;
+                text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700;
+                animation: goldenStarBurst 3s ease-out forwards;
+                transform-origin: center;
+              `;
+              document.body.appendChild(star);
+              setTimeout(() => star.remove(), 3000);
+            }, i * 100);
+          }
+        },
+        
+        createPurpleAura(position) {
+          for(let i = 0; i < 8; i++) {
+            setTimeout(() => {
+              const aura = document.createElement('div');
+              const scale = 1 + i * 0.3;
+              
+              aura.style.cssText = `
+                position: fixed;
+                left: ${position.x - 40 * scale}px;
+                top: ${position.y - 40 * scale}px;
+                width: ${80 * scale}px;
+                height: ${80 * scale}px;
+                background: radial-gradient(circle, 
+                  transparent 40%, 
+                  #9932CC33 50%, 
+                  #9932CC66 60%, 
+                  transparent 100%);
+                border-radius: 50%;
+                z-index: 999997;
+                pointer-events: none;
+                animation: purpleWave 2s ease-out forwards;
+              `;
+              document.body.appendChild(aura);
+              setTimeout(() => aura.remove(), 2000);
+            }, i * 200);
+          }
+        },
+        
+        createSparkleRain(position) {
+          for(let i = 0; i < 25; i++) {
+            setTimeout(() => {
+              const sparkle = document.createElement('div');
+              const xOffset = (Math.random() - 0.5) * 300;
+              const yOffset = (Math.random() - 0.5) * 200;
+              const isGold = Math.random() > 0.4;
+              
+              sparkle.innerHTML = isGold ? '✦' : '◆';
+              sparkle.style.cssText = `
+                position: fixed;
+                left: ${position.x + xOffset}px;
+                top: ${position.y + yOffset - 100}px;
+                font-size: ${4 + Math.random() * 8}px;
+                color: ${isGold ? '#FFD700' : '#9932CC'};
+                z-index: 999999;
+                pointer-events: none;
+                text-shadow: 0 0 5px currentColor;
+                animation: sparklefall 4s ease-out forwards;
+              `;
+              document.body.appendChild(sparkle);
+              setTimeout(() => sparkle.remove(), 4000);
+            }, i * 150);
+          }
+        },
+        
+        createShinyExplosion(position) {
+          const explosion = document.createElement('div');
+          explosion.style.cssText = `
+            position: fixed;
+            left: ${position.x - 100}px;
+            top: ${position.y - 100}px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, 
+              #FFD700 0%, 
+              #FFA500 20%,
+              #9932CC 40%,
+              #8844ff 60%,
+              transparent 100%);
+            border-radius: 50%;
+            z-index: 999999;
+            pointer-events: none;
+            animation: shinyExplosion 2s ease-out forwards;
+          `;
+          document.body.appendChild(explosion);
+          setTimeout(() => explosion.remove(), 2000);
+        },
+        
+        createCustomShinyExplosion(position, pokeballColor, ballType) {
+          console.log(`✨ Creating custom shiny explosion for ${ballType} with color ${pokeballColor}`);
+          
+          const explosion = document.createElement('div');
+          explosion.style.cssText = `
+            position: fixed;
+            left: ${position.x - 100}px;
+            top: ${position.y - 100}px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, 
+              #FFD700 0%, 
+              #FFA500 15%,
+              ${pokeballColor}88 35%,
+              ${pokeballColor}66 55%,
+              transparent 100%);
+            border-radius: 50%;
+            z-index: 999999;
+            pointer-events: none;
+            animation: shinyExplosion 2s ease-out forwards;
+          `;
+          document.body.appendChild(explosion);
+          setTimeout(() => explosion.remove(), 2000);
+          
+          this.createBallSpecificShinyEffects(position, pokeballColor, ballType);
+        },
+        
+        createBallSpecificShinyEffects(position, pokeballColor, ballType) {
+          switch(ballType) {
+            case 'pokeball':
+              this.createRedWhiteShinyEffect(position);
+              break;
+            case 'greatball':
+              this.createBlueShinyEffect(position);
+              break;
+            case 'ultraball':
+              this.createBlackGoldShinyEffect(position);
+              break;
+            case 'quickball':
+              this.createLightningShinyEffect(position);
+              break;
+            case 'luxuryball':
+              this.createLuxuryShinyEffect(position);
+              break;
+            case 'loveball':
+              this.createHeartShinyEffect(position);
+              break;
+            default:
+              this.createGenericShinyEffect(position, pokeballColor);
+              break;
+          }
+        },
+        
+        createRedWhiteShinyEffect(position) {
+          for(let i = 0; i < 8; i++) {
+            const star = document.createElement('div');
+            const angle = i * 45;
+            const distance = 80 + Math.random() * 60;
+            const isRed = i % 2 === 0;
+            
+            star.innerHTML = '★';
+            star.style.cssText = `
+              position: fixed;
+              left: ${position.x + Math.cos(angle * Math.PI / 180) * distance}px;
+              top: ${position.y + Math.sin(angle * Math.PI / 180) * distance}px;
+              font-size: ${12 + Math.random() * 8}px;
+              color: ${isRed ? '#FF4444' : '#FFFFFF'};
+              z-index: 999999;
+              pointer-events: none;
+              text-shadow: 0 0 8px currentColor;
+              animation: goldenStarBurst 2.5s ease-out forwards;
+            `;
+            document.body.appendChild(star);
+            setTimeout(() => star.remove(), 2500);
+          }
+        },
+        
+        createBlueShinyEffect(position) {
+          for(let i = 0; i < 5; i++) {
+            setTimeout(() => {
+              const wave = document.createElement('div');
+              wave.style.cssText = `
+                position: fixed;
+                left: ${position.x - 50}px;
+                top: ${position.y - 50}px;
+                width: 100px;
+                height: 100px;
+                border: 3px solid #4488FF;
+                border-radius: 50%;
+                z-index: 999998;
+                pointer-events: none;
+                animation: purpleWave 2s ease-out forwards;
+              `;
+              document.body.appendChild(wave);
+              setTimeout(() => wave.remove(), 2000);
+            }, i * 200);
+          }
+        },
+        
+        createBlackGoldShinyEffect(position) {
+          const directions = [0, 90, 180, 270];
+          directions.forEach(angle => {
+            const ray = document.createElement('div');
+            ray.style.cssText = `
+              position: fixed;
+              left: ${position.x}px;
+              top: ${position.y}px;
+              width: 150px;
+              height: 6px;
+              background: linear-gradient(90deg, #FFD700, #666666, transparent);
+              transform-origin: 0 50%;
+              transform: rotate(${angle}deg);
+              z-index: 999998;
+              pointer-events: none;
+              animation: goldenStarBurst 2s ease-out forwards;
+            `;
+            document.body.appendChild(ray);
+            setTimeout(() => ray.remove(), 2000);
+          });
+        },
+        
+        createLightningShinyEffect(position) {
+          for(let i = 0; i < 3; i++) {
+            setTimeout(() => {
+              const lightning = document.createElement('div');
+              lightning.innerHTML = '⚡';
+              lightning.style.cssText = `
+                position: fixed;
+                left: ${position.x + (Math.random() - 0.5) * 100}px;
+                top: ${position.y + (Math.random() - 0.5) * 100}px;
+                font-size: 30px;
+                color: #44FFFF;
+                z-index: 999999;
+                pointer-events: none;
+                text-shadow: 0 0 15px #44FFFF;
+                animation: sparklefall 1.5s ease-out forwards;
+              `;
+              document.body.appendChild(lightning);
+              setTimeout(() => lightning.remove(), 1500);
+            }, i * 300);
+          }
+        },
+        
+        createLuxuryShinyEffect(position) {
+          for(let i = 0; i < 12; i++) {
+            setTimeout(() => {
+              const luxury = document.createElement('div');
+              luxury.innerHTML = '💎';
+              luxury.style.cssText = `
+                position: fixed;
+                left: ${position.x + (Math.random() - 0.5) * 150}px;
+                top: ${position.y + (Math.random() - 0.5) * 150}px;
+                font-size: ${15 + Math.random() * 10}px;
+                color: #CC9900;
+                z-index: 999999;
+                pointer-events: none;
+                text-shadow: 0 0 10px #FFD700;
+                animation: sparklefall 3s ease-out forwards;
+              `;
+              document.body.appendChild(luxury);
+              setTimeout(() => luxury.remove(), 3000);
+            }, i * 150);
+          }
+        },
+        
+        createHeartShinyEffect(position) {
+          for(let i = 0; i < 6; i++) {
+            setTimeout(() => {
+              const heart = document.createElement('div');
+              heart.innerHTML = '💖';
+              heart.style.cssText = `
+                position: fixed;
+                left: ${position.x + (Math.random() - 0.5) * 120}px;
+                top: ${position.y + (Math.random() - 0.5) * 120}px;
+                font-size: 20px;
+                z-index: 999999;
+                pointer-events: none;
+                animation: sparklefall 2.5s ease-out forwards;
+              `;
+              document.body.appendChild(heart);
+              setTimeout(() => heart.remove(), 2500);
+            }, i * 200);
+          }
+        },
+        
+        createGenericShinyEffect(position, color) {
+          for(let i = 0; i < 8; i++) {
+            const sparkle = document.createElement('div');
+            const angle = i * 45;
+            const distance = 70 + Math.random() * 50;
+            
+            sparkle.innerHTML = '✦';
+            sparkle.style.cssText = `
+              position: fixed;
+              left: ${position.x + Math.cos(angle * Math.PI / 180) * distance}px;
+              top: ${position.y + Math.sin(angle * Math.PI / 180) * distance}px;
+              font-size: ${10 + Math.random() * 8}px;
+              color: ${color};
+              z-index: 999999;
+              pointer-events: none;
+              text-shadow: 0 0 8px currentColor, 0 0 15px #FFD700;
+              animation: goldenStarBurst 2s ease-out forwards;
+            `;
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 2000);
+          }
+        },
+        
+        createShinyText(pokemonName) {
+          const shinyText = document.createElement('div');
+          shinyText.innerHTML = `✨ ¡SHINY! ✨`;
+          shinyText.style.cssText = `
+            position: fixed;
+            left: 50%;
+            top: 20%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #FFD700, #FFA500, #9932CC, #8844ff);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 999999;
+            pointer-events: none;
+            animation: shinyTextGlow 4s ease-out forwards;
+          `;
+          document.body.appendChild(shinyText);
+          setTimeout(() => shinyText.remove(), 4000);
+        }
+      };
+
+      // 🎾 SISTEMA DE POKÉMON COMPLETO CON SECUENCIA CORRECTA
+      const pokemonManager = {
+        activePokemon: [],
+        maxPokemon: 6,
+        isCountdownActive: false,
+        countdownTimer: null,
+
+        // 🎲 Generar posición aleatoria
+        // 🎯 Generar posición aleatoria válida (evita superposiciones)
+        getRandomPosition() {
+          const margin = 120; // Distancia mínima entre Pokemon
+          const maxAttempts = 10;
+          let attempts = 0;
+          
+          while (attempts < maxAttempts) {
+            const newPosition = {
+              x: Math.random() * (window.innerWidth - 400) + 200,
+              y: Math.random() * (window.innerHeight - 500) + 250
+            };
+            
+            // Verificar que no esté muy cerca de otros Pokemon activos
+            const tooClose = this.activePokemon.some(pokemon => {
+              const distance = Math.sqrt(
+                Math.pow(newPosition.x - pokemon.position.x, 2) + 
+                Math.pow(newPosition.y - pokemon.position.y, 2)
+              );
+              return distance < margin;
+            });
+            
+            if (!tooClose) {
+              console.log(`📍 Posición válida encontrada: (${newPosition.x}, ${newPosition.y})`);
+              return newPosition;
+            }
+            
+            attempts++;
+          }
+          
+          // Si no encuentra posición libre, usar una aleatoria (fallback)
+          console.log(`⚠️ No se encontró posición libre, usando fallback`);
+          return {
+            x: Math.random() * (window.innerWidth - 400) + 200,
+            y: Math.random() * (window.innerHeight - 500) + 250
+          };
+        },
+
+        // 🎾 Spawning de pokémon (evita duplicados)
+        spawnRandomPokemon() {
+          if (this.activePokemon.length >= this.maxPokemon) {
+            console.log(`🚫 LÍMITE ALCANZADO: ${this.activePokemon.length}/${this.maxPokemon} pokémon - Esperando liberación`);
+            return;
+          }
+
+          // Seleccionar pokeball aleatorio
+          const randomBall = pokeballDatabaseMain[Math.floor(Math.random() * pokeballDatabaseMain.length)];
+          
+                     // POKEMON DISPONIBLES CON CATEGORÍAS
+           const regularPokemon = ['Pikachu', 'Charizard', 'Blastoise', 'Venusaur', 'Lucario', 'Greninja', 'Alakazam', 'Gengar', 'Machamp', 'Golem', 'Lapras', 'Snorlax'];
+           const pseudoLegendaryPokemon = ['Dragonite', 'Tyranitar', 'Salamence', 'Metagross', 'Garchomp', 'Hydreigon', 'Goodra', 'Kommoo', 'Dragapult'];
+           const legendaryPokemon = ['Mewtwo', 'Mew', 'Articuno', 'Zapdos', 'Moltres', 'Raikou', 'Entei', 'Suicune', 'Lugia', 'Hooh', 'Celebi', 'Rayquaza', 'Kyogre', 'Groudon', 'Latios', 'Latias', 'Dialga', 'Palkia', 'Giratina'];
+           const allPokemon = [...regularPokemon, ...pseudoLegendaryPokemon, ...legendaryPokemon];
+          
+          // EVITAR POKEMON DUPLICADOS
+          const currentPokemonNames = this.activePokemon.map(p => p.name);
+          const unusedPokemon = allPokemon.filter(name => !currentPokemonNames.includes(name));
+          
+          // Si todos están en uso, usar cualquiera
+          const pokemonToUse = unusedPokemon.length > 0 ? unusedPokemon : allPokemon;
+          const randomPokemon = pokemonToUse[Math.floor(Math.random() * pokemonToUse.length)];
+          
+                     // DETERMINAR POKEBALL POR CATEGORÍA
+           const isLegendary = legendaryPokemon.includes(randomPokemon);
+           const isPseudoLegendary = pseudoLegendaryPokemon.includes(randomPokemon);
+           let selectedBall;
+           
+           if (isLegendary) {
+             // Legendarios SIEMPRE usan Master Ball
+             selectedBall = pokeballDatabaseMain.find(ball => ball.id === 'masterball') || pokeballDatabaseMain[0];
+             console.log(`👑 ${randomPokemon} es LEGENDARIO - usando MASTER BALL`);
+           } else if (isPseudoLegendary) {
+             // Semi-legendarios usan pokeballs fuertes pero no Master Ball
+             const pseudoLegendaryBalls = ['ultraball', 'timerball', 'duskball', 'repeatball'];
+             const availableBalls = pokeballDatabaseMain.filter(ball => pseudoLegendaryBalls.includes(ball.id));
+             selectedBall = availableBalls[Math.floor(Math.random() * availableBalls.length)] || pokeballDatabaseMain.find(ball => ball.id === 'ultraball');
+             console.log(`⭐ ${randomPokemon} es PSEUDO-LEGENDARIO - usando ${selectedBall.name.toUpperCase()}`);
+           } else {
+             // Pokemon regulares usan pokeball aleatoria (excluyendo Master Ball)
+             const regularBalls = pokeballDatabaseMain.filter(ball => ball.id !== 'masterball');
+             selectedBall = regularBalls[Math.floor(Math.random() * regularBalls.length)];
+           }
+          
+                     // Probabilidad de shiny ajustada por rareza
+           let shinyChance = 0.2; // Base 20%
+           if (isLegendary) shinyChance = 0.35; // 35% para legendarios
+           else if (isPseudoLegendary) shinyChance = 0.25; // 25% para pseudo-legendarios
+           
+           const isShiny = Math.random() < shinyChance;
+          
+          // Posición aleatoria
+          const position = this.getRandomPosition();
+
+           const categoryText = isLegendary ? '👑(LEGENDARY)' : isPseudoLegendary ? '⭐(PSEUDO-LEGENDARY)' : '';
+           console.log(`🎾 Spawning ${randomPokemon} ${isShiny ? '✨(SHINY)' : ''} ${categoryText} with ${selectedBall.name} (Evitando: ${currentPokemonNames.join(', ')})`);
+          
+          // Crear ID único para tracking
+          const pokemonId = Date.now() + Math.random();
+          this.activePokemon.push({
+            id: pokemonId,
+            name: randomPokemon,
+             ball: selectedBall.id,
+            isShiny: isShiny,
+             isLegendary: isLegendary,
+             isPseudoLegendary: isPseudoLegendary,
+            position: position
+          });
+
+          // Ejecutar secuencia completa
+          this.createCompletePokeballSequence(selectedBall.id, position, randomPokemon, isShiny, pokemonId);
+          
+          // Continuar spawning si hay espacio
+          setTimeout(() => {
+            if (this.activePokemon.length < this.maxPokemon && !this.isCountdownActive) {
+              this.spawnRandomPokemon();
+            }
+          }, 1000);
+        },
+
+        // 🎬 SECUENCIA CORRECTA: Caída(1→11) → Pokemon(pequeño→grande) → Pokeball(11→1) → Espera → Pokeball(11) → Pokemon(grande→pequeño) → Pokeball(11→1)
+        createCompletePokeballSequence(ballType, position, pokemonName, isShiny, pokemonId) {
+          const pokeballData = pokeballDatabaseMain.find(p => p.id === ballType);
+          if (!pokeballData) return;
+
+          console.log(`🎬 SECUENCIA COMPLETA para ${pokemonName} ${isShiny ? '(SHINY)' : ''}`);
+
+          // Registrar pokeball usada para este pokémon
+          const pokemonData = this.activePokemon.find(p => p.id === pokemonId);
+          if (pokemonData) {
+            pokemonData.pokeballData = pokeballData;
+          }
+
+          // FASE 1: CAÍDA CON APERTURA (Frame 1→11 durante la caída)
+          const pokeball1 = document.createElement('div');
+          pokeball1.dataset.pokemonId = `${pokemonId}_release`;
+          pokeball1.style.cssText = `
+            position: fixed;
+            left: ${position.x - 20.5}px;
+            top: ${position.y - 150}px;
+            width: 41px;
+            height: 40px;
+            background-image: url('resources/sprites/pokeball-sprites-oficial.png');
+            background-size: 1106px 680px;
+            background-position: ${pokeballData.xPos}px 0px;
+            background-repeat: no-repeat;
+            z-index: 999999;
+            pointer-events: none;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            transform-origin: center center;
+          `;
+          document.body.appendChild(pokeball1);
+
+          // CAÍDA SINCRONIZADA: Frame 1→11 mientras cae
+          this.animateFallWithOpening(pokeball1, pokeballData, position, () => {
+            console.log(`🎾 Pokeball llegó - Frame 11 - POKEMON SALE PEQUEÑO`);
+            
+            // FASE 2: POKEMON SALE PEQUEÑO → CRECE A TAMAÑO REAL (inmediato)
+            const pokemon = this.createPokemonSpriteWithGrowth(pokemonName, position, isShiny, pokemonId);
+            
+            // FASE 3: EFECTOS ESPECIALES
+            this.createEffectsAtPosition(position, ballType, isShiny, pokemonName);
+            
+            // FASE 4: POKEBALL DESAPARECE (Frame 11→1)
+            this.animatePokeballFrames(pokeball1, pokeballData, 11, 1, 100, () => {
+              console.log(`🎾 Pokeball desaparece - Solo Pokemon visible por 10 segundos`);
+              pokeball1.remove();
+              
+              // FASE 5: CUENTA REGRESIVA (10 segundos - solo Pokemon visible)
+              setTimeout(() => {
+                console.log(`⏰ CAPTURA: ${pokemonName} regresa a pokeball`);
+                
+                // FASE 6: POKEBALL APARECE DIRECTAMENTE EN FRAME 11 (abierta)
+                const pokeball2 = document.createElement('div');
+                pokeball2.dataset.pokemonId = `${pokemonId}_capture`;
+                pokeball2.style.cssText = `
+                  position: fixed;
+                  left: ${position.x - 20.5}px;
+                  top: ${position.y - 20}px;
+                  width: 41px;
+                  height: 40px;
+                  background-image: url('resources/sprites/pokeball-sprites-oficial.png');
+                  background-size: 1106px 680px;
+                  background-position: ${pokeballData.xPos}px ${(11-1) * -40}px;
+                  background-repeat: no-repeat;
+                  z-index: 999999;
+                  pointer-events: none;
+                  image-rendering: pixelated;
+                  image-rendering: -moz-crisp-edges;
+                  image-rendering: crisp-edges;
+                  transform-origin: center center;
+                `;
+                document.body.appendChild(pokeball2);
+                console.log(`🎾 Pokeball captura aparece en Frame 11`);
+                
+                // FASE 7: POKEMON SE ENCOGE Y DESAPARECE (inmediato)
+                const currentPokemon = document.querySelector(`[data-pokemon-id="${pokemonId}"]`);
+                if (currentPokemon) {
+                  this.shrinkAndRemovePokemon(currentPokemon, () => {
+                    console.log(`🔄 ${pokemonName} capturado - Pokeball se cierra`);
+                    
+                    // FASE 8: POKEBALL SE CIERRA (Frame 11→10→9→8→7→6→5→4→3→2→1)
+                  this.animatePokeballFrames(pokeball2, pokeballData, 11, 1, 100, () => {
+                      console.log(`✅ SECUENCIA COMPLETA: ${pokemonName} capturado exitosamente`);
+                    pokeball2.remove();
+                    this.removePokemon(pokemonId);
+                  });
+                });
+                }
+              }, 10000);
+            });
+          });
+        },
+
+        // 🎨 Crear sprite del pokémon
+        createPokemonSprite(pokemonName, position, isShiny, pokemonId) {
+          const pokemon = document.createElement('div');
+          pokemon.dataset.pokemonId = pokemonId;
+          
+          // CREAR ELEMENTO CON TAMAÑO INICIAL TEMPORAL
+          pokemon.style.cssText = `
+            position: fixed;
+            left: ${position.x - 32}px;
+            top: ${position.y - 50}px;
+            width: 64px;
+            height: 64px;
+            background: url('resources/sprites/ani${isShiny ? '-shiny' : ''}/${pokemonName.toLowerCase()}.gif') center no-repeat;
+            background-size: auto;
+            z-index: 999998;
+            pointer-events: none;
+            /* Sin animación artificial - usar solo GIF natural */
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            transform-origin: center center;
+          `;
+          
+          // DETECTAR TAMAÑO REAL DEL GIF Y AJUSTAR
+          const img = new Image();
+          img.onload = () => {
+            const realWidth = img.naturalWidth || img.width;
+            const realHeight = img.naturalHeight || img.height;
+            
+            // Ajustar posición y tamaño basado en el tamaño real
+            pokemon.style.left = `${position.x - (realWidth / 2)}px`;
+            pokemon.style.top = `${position.y - realHeight + 10}px`;
+            pokemon.style.width = `${realWidth}px`;
+            pokemon.style.height = `${realHeight}px`;
+            
+            console.log(`🎮 ${pokemonName} ${isShiny ? '(SHINY)' : ''} - Tamaño real aplicado: ${realWidth}x${realHeight}px`);
+          };
+          img.src = `resources/sprites/ani${isShiny ? '-shiny' : ''}/${pokemonName.toLowerCase()}.gif`;
+          
+          document.body.appendChild(pokemon);
+
+          // Texto "SHINY" arriba del pokémon si es shiny
+          if (isShiny) {
+            this.createShinyText(pokemonName, position);
+          }
+
+          console.log(`🎮 ${pokemonName} ${isShiny ? '(SHINY)' : ''} apareció en posición (${position.x}, ${position.y})`);
+          return pokemon;
+        },
+
+        // ✨ Crear texto "SHINY" con estilo brillante original del test
+        createShinyText(pokemonName, position) {
+          const shinyLabel = document.createElement('div');
+          shinyLabel.innerHTML = `✨ SHINY! ✨`;
+          
+          // Ancho fijo para solo "SHINY!" sin nombre del Pokemon
+          const textWidth = 160;
+          
+          shinyLabel.style.cssText = `
+            position: fixed;
+            left: ${position.x - (textWidth / 2)}px;
+            top: ${position.y - 40}px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 
+              0 0 10px #FFD700,
+              0 0 20px #FFD700,
+              0 0 30px #9932CC;
+            z-index: 1000000;
+            pointer-events: none;
+            animation: shinyTextGlow 3s ease-out forwards;
+            text-align: center;
+            width: ${textWidth}px;
+          `;
+          document.body.appendChild(shinyLabel);
+          
+          // Remover texto después de 3 segundos (como el original)
+          setTimeout(() => shinyLabel.remove(), 3000);
+        },
+
+        // 👑 Crear texto "LEGENDARY" para Pokemon legendarios
+        createLegendaryText(pokemonName, position) {
+          const legendaryLabel = document.createElement('div');
+          legendaryLabel.innerHTML = `👑 ${pokemonName} LEGENDARY 👑`;
+          
+          // Calcular ancho dinámico basado en longitud del nombre
+          const textWidth = Math.max(200, pokemonName.length * 12 + 140);
+          
+          legendaryLabel.style.cssText = `
+            position: fixed;
+            left: ${position.x - (textWidth / 2)}px;
+            top: ${position.y - 80}px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #FF6B35;
+            text-shadow: 
+              0 0 10px #FF6B35,
+              0 0 20px #FF6B35,
+              0 0 30px #8B0000;
+            z-index: 1000000;
+            pointer-events: none;
+            animation: shinyTextGlow 3s ease-out forwards;
+            text-align: center;
+            width: ${textWidth}px;
+          `;
+          document.body.appendChild(legendaryLabel);
+          
+          // Remover texto después de 3 segundos
+          setTimeout(() => legendaryLabel.remove(), 3000);
+        },
+
+        // ⭐ Crear texto "PSEUDO-LEGENDARY" para Pokemon pseudo-legendarios
+        createPseudoLegendaryText(pokemonName, position) {
+          const pseudoLegendaryLabel = document.createElement('div');
+          pseudoLegendaryLabel.innerHTML = `⭐ ${pokemonName} PSEUDO-LEGENDARY ⭐`;
+          
+          // Calcular ancho dinámico basado en longitud del nombre
+          const textWidth = Math.max(250, pokemonName.length * 12 + 180);
+          
+          pseudoLegendaryLabel.style.cssText = `
+            position: fixed;
+            left: ${position.x - (textWidth / 2)}px;
+            top: ${position.y - 80}px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #9932CC;
+            text-shadow: 
+              0 0 10px #9932CC,
+              0 0 20px #9932CC,
+              0 0 30px #4B0082;
+            z-index: 1000000;
+            pointer-events: none;
+            animation: shinyTextGlow 3s ease-out forwards;
+            text-align: center;
+            width: ${textWidth}px;
+          `;
+          document.body.appendChild(pseudoLegendaryLabel);
+          
+          // Remover texto después de 3 segundos
+          setTimeout(() => pseudoLegendaryLabel.remove(), 3000);
+        },
+
+        // 🎆 Crear efectos en la posición del pokémon
+        createEffectsAtPosition(position, ballType, isShiny, pokemonName) {
+          if (isShiny) {
+            const pokeballData = pokeballDatabaseMain.find(p => p.id === ballType);
+            advancedEffectsMain.createCustomShinyExplosion(position, pokeballData.color, ballType);
+            
+            if (ballType === 'masterball') {
+              advancedEffectsMain.createMasterBallStarsEffect(position);
+            }
+          } else if (ballType === 'masterball') {
+            advancedEffectsMain.createMasterBallStarsEffect(position);
+          } else {
+            createBasicOpenEffect(position, pokeballDatabaseMain.find(p => p.id === ballType));
+          }
+        },
+
+        // 🎬 Animador de frames de pokeball
+        animatePokeballFrames(sprite, pokeballData, startFrame, endFrame, frameTime, onComplete) {
+          let currentFrame = startFrame;
+          const direction = startFrame < endFrame ? 1 : -1;
+          
+          console.log(`🎬 Animando frames ${startFrame}→${endFrame}`);
+          
+          const animate = () => {
+            // Calcular posición Y del frame (frames van de 0 a 10, o sea frame-1)
+            const yPos = (currentFrame - 1) * -40;
+            sprite.style.backgroundPosition = `${pokeballData.xPos}px ${yPos}px`;
+            
+            console.log(`🎞️ Frame ${currentFrame} - Y: ${yPos}px`);
+            
+            if (currentFrame === endFrame) {
+              console.log(`✅ Animación completada en frame ${endFrame}`);
+              if (onComplete) onComplete();
+              return;
+            }
+            
+            currentFrame += direction;
+            setTimeout(animate, frameTime);
+          };
+          
+          animate();
+        },
+
+        // 🎯 CAÍDA CON APERTURA SINCRONIZADA (Frame 1→11 durante la caída)
+        animateFallWithOpening(sprite, pokeballData, finalPosition, onComplete) {
+          const fallDuration = 1500; // 1.5 segundos
+          const frameCount = 11;
+          let currentFrame = 1;
+          let startTime = Date.now();
+          let fallStartY = finalPosition.y - 150;
+          let fallEndY = finalPosition.y - 20;
+          
+          console.log(`🎯 CAÍDA SINCRONIZADA: Frame 1→11 durante ${fallDuration}ms`);
+          
+          const animateSync = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / fallDuration, 1);
+            
+            // CALCULAR POSICIÓN Y (caída con easing)
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const currentY = fallStartY + (fallEndY - fallStartY) * easeOut;
+            
+            // CALCULAR FRAME basado en progreso (1→11)
+            const targetFrame = Math.min(Math.floor(progress * frameCount) + 1, frameCount);
+            
+            // ACTUALIZAR FRAME si cambió
+            if (targetFrame !== currentFrame) {
+              currentFrame = targetFrame;
+              const yPos = (currentFrame - 1) * -40;
+              sprite.style.backgroundPosition = `${pokeballData.xPos}px ${yPos}px`;
+              console.log(`🎞️ Caída ${Math.round(progress * 100)}% → Frame ${currentFrame}`);
+            }
+            
+            // ACTUALIZAR POSICIÓN Y
+            sprite.style.top = `${currentY}px`;
+            
+            // CONTINUAR HASTA COMPLETAR
+            if (progress < 1) {
+              requestAnimationFrame(animateSync);
+            } else {
+              console.log(`✅ Caída completada - Frame ${currentFrame} - Pokeball abierta`);
+              if (onComplete) onComplete();
+            }
+          };
+          
+          animateSync();
+        },
+
+        // 🎮 CREAR POKEMON CON CRECIMIENTO (pequeño → tamaño real)
+        createPokemonSpriteWithGrowth(pokemonName, position, isShiny, pokemonId) {
+          const pokemon = document.createElement('div');
+          pokemon.dataset.pokemonId = pokemonId;
+          
+          // CREAR POKEMON PEQUEÑO INICIAL
+          pokemon.style.cssText = `
+            position: fixed;
+            left: ${position.x - 16}px;
+            top: ${position.y - 32}px;
+            width: 32px;
+            height: 32px;
+            background: url('resources/sprites/ani${isShiny ? '-shiny' : ''}/${pokemonName.toLowerCase()}.gif') center no-repeat;
+            background-size: auto;
+            z-index: 999998;
+            pointer-events: none;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            transform-origin: center center;
+            transform: scale(0.5);
+          `;
+          
+          document.body.appendChild(pokemon);
+          console.log(`🎮 ${pokemonName} sale pequeño - creciendo...`);
+          
+          // DETECTAR TAMAÑO REAL Y CRECER INMEDIATAMENTE
+          const img = new Image();
+          img.onload = () => {
+            const realWidth = img.naturalWidth || img.width;
+            const realHeight = img.naturalHeight || img.height;
+            
+            // ANIMAR CRECIMIENTO INMEDIATO
+            pokemon.style.transition = 'all 0.3s ease-out';
+            pokemon.style.left = `${position.x - (realWidth / 2)}px`;
+            pokemon.style.top = `${position.y - realHeight + 10}px`;
+            pokemon.style.width = `${realWidth}px`;
+            pokemon.style.height = `${realHeight}px`;
+            pokemon.style.transform = 'scale(1)';
+            
+            console.log(`✅ ${pokemonName} creció a tamaño real: ${realWidth}x${realHeight}px`);
+          };
+          img.src = `resources/sprites/ani${isShiny ? '-shiny' : ''}/${pokemonName.toLowerCase()}.gif`;
+          
+                                // Texto especial para SHINY y/o categorías especiales
+           const pokemonData = this.activePokemon.find(p => p.id === pokemonId);
+           if (isShiny || (pokemonData && (pokemonData.isLegendary || pokemonData.isPseudoLegendary))) {
+              setTimeout(() => {
+                if (isShiny && pokemonData && pokemonData.isLegendary) {
+                  // LEGENDARIO + SHINY: Texto SHINY arriba, texto LEGENDARY abajo
+                  const shinyPosition = {
+                    x: position.x,
+                    y: position.y - 80 // Arriba
+                  };
+                  const legendaryPosition = {
+                    x: position.x,
+                    y: position.y + 20 // Abajo del pokemon
+                  };
+                  this.createShinyText(pokemonName, shinyPosition);
+                  this.createLegendaryText(pokemonName, legendaryPosition);
+                } else if (isShiny && pokemonData && pokemonData.isPseudoLegendary) {
+                  // PSEUDO-LEGENDARIO + SHINY: Texto SHINY arriba, texto PSEUDO-LEGENDARY abajo
+                  const shinyPosition = {
+                    x: position.x,
+                    y: position.y - 80 // Arriba
+                  };
+                  const pseudoLegendaryPosition = {
+                    x: position.x,
+                    y: position.y + 20 // Abajo del pokemon
+                  };
+                  this.createShinyText(pokemonName, shinyPosition);
+                  this.createPseudoLegendaryText(pokemonName, pseudoLegendaryPosition);
+                } else if (isShiny) {
+                  // Solo SHINY
+                  const adjustedPosition = {
+                    x: position.x,
+                    y: position.y - 40
+                  };
+                  this.createShinyText(pokemonName, adjustedPosition);
+                } else if (pokemonData && pokemonData.isLegendary) {
+                  // Solo LEGENDARY
+                  const adjustedPosition = {
+                    x: position.x,
+                    y: position.y - 40
+                  };
+                  this.createLegendaryText(pokemonName, adjustedPosition);
+                } else if (pokemonData && pokemonData.isPseudoLegendary) {
+                  // Solo PSEUDO-LEGENDARY
+                  const adjustedPosition = {
+                    x: position.x,
+                    y: position.y - 40
+                  };
+                  this.createPseudoLegendaryText(pokemonName, adjustedPosition);
+                }
+              }, 400);
+           }
+          
+          return pokemon;
+        },
+
+        // 🔄 ENCOGER Y REMOVER POKEMON (tamaño real → pequeño → desaparece)
+        shrinkAndRemovePokemon(pokemonElement, onComplete) {
+          console.log(`🔄 Pokemon encogiendo...`);
+          
+          // ANIMAR ENCOGIMIENTO INMEDIATO
+          pokemonElement.style.transition = 'all 0.3s ease-in';
+          pokemonElement.style.transform = 'scale(0.1)';
+          pokemonElement.style.opacity = '0';
+          
+          // REMOVER DESPUÉS DEL ENCOGIMIENTO
+          setTimeout(() => {
+            pokemonElement.remove();
+            // Remover texto shiny si existe
+            document.querySelectorAll('div').forEach(el => {
+              if (el.innerHTML && el.innerHTML.includes('SHINY')) {
+                el.remove();
+              }
+            });
+            console.log(`✅ Pokemon removido`);
+            if (onComplete) onComplete();
+          }, 300);
+        },
+
+        // 🗑️ Remover pokémon del tracking
+        removePokemon(pokemonId) {
+          this.activePokemon = this.activePokemon.filter(p => p.id !== pokemonId);
+          console.log(`🗑️ Pokémon removed. Active: ${this.activePokemon.length}/${this.maxPokemon}`);
+          
+          // Si hay espacio, continuar spawning
+          if (this.activePokemon.length < this.maxPokemon && !this.isCountdownActive) {
+            setTimeout(() => this.spawnRandomPokemon(), 1000);
+          }
+        },
+
+
+
+        resetAndRestart() {
+          console.log('🔄 REINICIANDO SISTEMA DE POKÉMON');
+          
+          // Limpiar pokémon activos
+          this.activePokemon = [];
+          this.isCountdownActive = false;
+          
+          // Remover sprites restantes
+          document.querySelectorAll('[data-pokemon-id]').forEach(sprite => sprite.remove());
+          
+          console.log('✅ Sistema reiniciado - Listo para nuevos pokémon');
+        },
+
+        // Función pública para iniciar el sistema
+        startAutoSpawning() {
+          console.log('🎾 SISTEMA DE POKÉMON INICIADO - Secuencia completa con posiciones aleatorias');
+          this.spawnRandomPokemon();
+        },
+
+        // Detectar cuando hay acciones para hacer Pokemon translúcidos
+        detectActions() {
+          // Detectar clicks en botones que requieren atención
+          document.addEventListener('click', (e) => {
+            const button = e.target.closest('button');
+            if (button && (button.dataset.bsToggle === 'modal' || button.classList.contains('btn'))) {
+              document.body.classList.add('action-in-progress');
+              
+              // Remover después de 3 segundos si no es un modal
+              if (!button.dataset.bsToggle) {
+                setTimeout(() => {
+                  document.body.classList.remove('action-in-progress');
+                }, 3000);
+              }
+            }
+          });
+
+          // Detectar cuando se cierran modales
+          document.addEventListener('hidden.bs.modal', () => {
+            document.body.classList.remove('action-in-progress');
+          });
+        },
+
+        // Función para detener el sistema de Pokemon
+        stopAutoSpawning() {
+          console.log('🛑 DETENIENDO sistema de Pokemon...');
+          this.isCountdownActive = true; // Evita nuevos spawns
+          if (this.countdownTimer) {
+            clearTimeout(this.countdownTimer);
+            this.countdownTimer = null;
+          }
+        },
+
+        // Función para pausar el sistema (NO eliminar)
+        pauseSystem() {
+          console.log('⏸️ PAUSANDO sistema de Pokemon...');
+          this.isCountdownActive = true; // Evita nuevos spawns
+          
+          // Pausar todos los timers activos
+          if (this.countdownTimer) {
+            clearTimeout(this.countdownTimer);
+            this.countdownTimer = null;
+          }
+          
+          // Pausar animaciones de Pokemon existentes
+          document.querySelectorAll('[data-pokemon-id]').forEach(sprite => {
+            if (sprite.style) {
+              sprite.style.animationPlayState = 'paused';
+              sprite.style.opacity = '0.5'; // Indicador visual de pausado
+              sprite.style.filter = 'grayscale(50%)'; // Efecto gris adicional
+            }
+          });
+          
+          // Pausar animaciones de pokeballs y efectos especiales
+          document.querySelectorAll('div').forEach(element => {
+            if (element.style && (
+              element.style.backgroundImage && element.style.backgroundImage.includes('pokeball') ||
+              element.className.includes('pokeball') ||
+              element.className.includes('shiny') ||
+              element.className.includes('legendary')
+            )) {
+              element.style.animationPlayState = 'paused';
+              element.style.opacity = '0.5';
+            }
+          });
+          
+          console.log('⏸️ Sistema pausado - Pokemon conservados con opacidad 50%');
+        },
+
+        // Función para reanudar el sistema
+        resumeSystem() {
+          console.log('▶️ REANUDANDO sistema de Pokemon...');
+          this.isCountdownActive = false; // Permite nuevos spawns
+          
+          // Reanudar animaciones de Pokemon existentes
+          document.querySelectorAll('[data-pokemon-id]').forEach(sprite => {
+            if (sprite.style) {
+              sprite.style.animationPlayState = 'running';
+              sprite.style.opacity = '1'; // Restaurar opacidad completa
+              sprite.style.filter = 'none'; // Quitar efecto gris
+            }
+          });
+          
+          // Reanudar animaciones de pokeballs y efectos especiales
+          document.querySelectorAll('div').forEach(element => {
+            if (element.style && (
+              element.style.backgroundImage && element.style.backgroundImage.includes('pokeball') ||
+              element.className.includes('pokeball') ||
+              element.className.includes('shiny') ||
+              element.className.includes('legendary')
+            )) {
+              element.style.animationPlayState = 'running';
+              element.style.opacity = '1';
+            }
+          });
+          
+          // Reanudar spawning si hay espacio
+          if (this.activePokemon.length < this.maxPokemon) {
+            setTimeout(() => {
+              console.log('▶️ Reanudando spawning automático...');
+              this.spawnRandomPokemon();
+            }, 1000);
+          }
+          
+          console.log('▶️ Sistema reanudado - Pokemon restaurados');
+        },
+
+        // Función para iniciar spawning automático
+        startAutoSpawning() {
+          console.log('🚀 INICIANDO spawning automático...');
+          this.isCountdownActive = false;
+          
+          // Iniciar primer spawn
+          if (this.activePokemon.length < this.maxPokemon) {
+            setTimeout(() => {
+              this.spawnRandomPokemon();
+            }, 500);
+          }
+        },
+
+        // Función para remover todos los Pokemon activos (solo usar en reset completo)
+        removeAllPokemon() {
+          console.log('🧹 Removiendo todos los Pokemon...');
+          // Limpiar array de tracking
+          this.activePokemon = [];
+          
+          // Remover todos los sprites de Pokemon
+          document.querySelectorAll('[data-pokemon-id]').forEach(sprite => sprite.remove());
+          
+          // Remover textos shiny/legendary
+          document.querySelectorAll('div').forEach(el => {
+            if (el.innerHTML && (el.innerHTML.includes('SHINY') || el.innerHTML.includes('LEGENDARY'))) {
+              el.remove();
+            }
+          });
+          
+          console.log('✅ Todos los Pokemon removidos');
+        }
+      };
+
+             // 🎬 FUNCIÓN PRINCIPAL PARA PROBAR POKEBALLS
+       // 🎮 FUNCIONES DEBUG GLOBALES PARA CONTROL MANUAL
+       window.debugPokemonSystem = function() {
+         console.log('🎾 ESTADO DEL SISTEMA DE POKÉMON:');
+         console.log(`📊 Pokémon activos: ${pokemonManager.activePokemon.length}/${pokemonManager.maxPokemon}`);
+         console.log(`⏰ Cuenta regresiva activa: ${pokemonManager.isCountdownActive}`);
+         console.log('🔗 Pokémon en pantalla:', pokemonManager.activePokemon.map(p => `${p.name} (${p.ball}${p.isShiny ? ' ✨' : ''})`));
+       };
+
+       window.forceSpawnPokemon = function() {
+         console.log('🚀 Forzando spawn de pokémon...');
+         pokemonManager.spawnRandomPokemon();
+       };
+
+       window.clearAllPokemon = function() {
+         console.log('🧹 Limpiando todos los pokémon...');
+         pokemonManager.activePokemon = [];
+         document.querySelectorAll('[data-pokemon-id]').forEach(sprite => sprite.remove());
+         // Limpiar textos shiny
+         document.querySelectorAll('div').forEach(el => {
+           if (el.innerHTML && el.innerHTML.includes('SHINY')) {
+             el.remove();
+           }
+         });
+         console.log('✅ Sistema limpiado');
+       };
+
+       window.startPokemonSystem = function() {
+         console.log('🎾 Iniciando sistema de pokémon...');
+         pokemonManager.startAutoSpawning();
+       };
+
+       window.resetPokemonSystem = function() {
+         console.log('🔄 Reseteando sistema de pokémon...');
+         pokemonManager.resetAndRestart();
+       };
+
+       window.testPokeballMain = function(ballType) {
+         if (ballType === 'random') {
+           const randomBall = pokeballDatabaseMain[Math.floor(Math.random() * pokeballDatabaseMain.length)];
+           ballType = randomBall.id;
+         }
+         
+         const pokeballData = pokeballDatabaseMain.find(p => p.id === ballType);
+        if (!pokeballData) {
+          console.error(`❌ Pokeball type '${ballType}' not found!`);
+          return;
+        }
+        
+        console.log(`🧪 Testing ${pokeballData.name} with frame-by-frame animation`);
+        
+        const position = {
+          x: window.innerWidth / 2,
+          y: window.innerHeight / 2
+        };
+        
+        createFrameByFramePokeballSequenceMain(ballType, position, 'Pikachu', false);
+      };
+
+      // 🎬 SECUENCIA COMPLETA CON ANIMACIÓN FRAME POR FRAME
+      function createFrameByFramePokeballSequenceMain(ballType, position, pokemonName, isShiny) {
+                 const pokeballData = pokeballDatabaseMain.find(p => p.id === ballType);
+         if (!pokeballData) return;
+        
+        console.log(`🎬 Starting synchronized sequence for ${pokeballData.name}`);
+        
+        // Crear sprite inicial - POSICIONAMIENTO CORREGIDO
+        const sprite = document.createElement('div');
+        sprite.style.cssText = `
+          position: fixed;
+          left: ${position.x - 20.5}px;
+          top: ${position.y - 150}px;
+          width: 41px;
+          height: 40px;
+          background-image: url('resources/sprites/pokeball-sprites-oficial.png');
+          background-size: 1106px 680px;
+          background-position: ${pokeballData.xPos}px 0px;
+          background-repeat: no-repeat;
+          z-index: 999999;
+          pointer-events: none;
+          image-rendering: pixelated;
+          image-rendering: -moz-crisp-edges;
+          image-rendering: crisp-edges;
+          transform-origin: center center;
+        `;
+        
+        document.body.appendChild(sprite);
+        
+        // Secuencia: Caída + Apertura + Efectos + Cierre
+        animateFallWithFramesMainSystem(sprite, pokeballData, position, () => {
+          // Efectos especiales
+          if (ballType === 'masterball') {
+            createMasterBallStars(position);
+            createGoldenAura(position);
+            createShinySparkles(position);
+          } else {
+            createBasicOpenEffect(position, pokeballData);
+          }
+          
+          setTimeout(() => {
+            // Mensaje Pokémon
+            showPokemonMessageMain(pokemonName);
+            
+            setTimeout(() => {
+              // Cierre (Frame 11→1)
+              animateFrameByFrameMainSystem(sprite, pokeballData, 11, 1, 60, () => {
+                sprite.remove();
+                console.log(`✅ ${pokeballData.name} sequence completed`);
+              });
+            }, 2000);
+          }, 1000);
+        });
+      }
+
+      // Funciones auxiliares del sistema principal
+      function animateFallWithFramesMainSystem(sprite, pokeballData, finalPosition, onComplete) {
+        const fallDuration = 1500;
+        const frameCount = 11;
+        let currentFrame = 1;
+        let startTime = Date.now();
+        let fallStartY = finalPosition.y - 150;
+        let fallEndY = finalPosition.y - 60;
+        
+        const animateSync = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / fallDuration, 1);
+          
+          const easeOut = 1 - Math.pow(1 - progress, 3);
+          const currentY = fallStartY + (fallEndY - fallStartY) * easeOut;
+          
+          const targetFrame = Math.min(Math.floor(progress * frameCount) + 1, frameCount);
+          
+          if (targetFrame !== currentFrame) {
+            currentFrame = targetFrame;
+            const yPos = (currentFrame - 1) * -40;
+            sprite.style.backgroundPosition = `${pokeballData.xPos}px ${yPos}px`;
+          }
+          
+          sprite.style.top = `${currentY}px`;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animateSync);
+          } else {
+            if (onComplete) onComplete();
+          }
+        };
+        
+        animateSync();
+      }
+
+      function animateFrameByFrameMainSystem(sprite, pokeballData, startFrame, endFrame, frameTime, onComplete) {
+        const maxFrames = 11;
+        startFrame = Math.max(1, Math.min(startFrame, maxFrames));
+        endFrame = Math.max(1, Math.min(endFrame, maxFrames));
+        
+        let currentFrame = startFrame;
+        const direction = startFrame < endFrame ? 1 : -1;
+        
+        const animate = () => {
+          currentFrame = Math.max(1, Math.min(currentFrame, maxFrames));
+          
+          const yPos = (currentFrame - 1) * -40;
+          sprite.style.backgroundPosition = `${pokeballData.xPos}px ${yPos}px`;
+          
+          if (currentFrame === endFrame) {
+            if (onComplete) onComplete();
+            return;
+          }
+          
+          const nextFrame = currentFrame + direction;
+          if (nextFrame >= 1 && nextFrame <= maxFrames) {
+            currentFrame = nextFrame;
+            setTimeout(animate, frameTime);
+          } else {
+            if (onComplete) onComplete();
+          }
+        };
+        
+        animate();
+      }
+
+      function createBasicOpenEffect(position, pokeballData) {
+        const flash = document.createElement('div');
+        flash.style.cssText = `
+          position: fixed;
+          left: ${position.x - 40}px;
+          top: ${position.y - 40}px;
+          width: 80px;
+          height: 80px;
+          background: radial-gradient(circle, ${pokeballData.color}66 0%, transparent 70%);
+          border-radius: 50%;
+          z-index: 999998;
+          pointer-events: none;
+          animation: flash-expand 1s ease-out forwards;
+        `;
+        
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 1000);
+      }
+
+      function showPokemonMessageMain(pokemonName) {
+        const messageDiv = document.createElement('div');
+        messageDiv.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: rgba(0,0,0,0.8);
+          color: white;
+          padding: 20px 40px;
+          border-radius: 10px;
+          font-size: 18px;
+          font-weight: bold;
+          z-index: 999999;
+          text-align: center;
+          box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        `;
+        messageDiv.textContent = `¡${pokemonName} ha aparecido!`;
+        
+        document.body.appendChild(messageDiv);
+        setTimeout(() => messageDiv.remove(), 2000);
+      }
+
+      // Event listeners para los botones de prueba - SISTEMA MEJORADO
+      document.getElementById('testMasterBall')?.addEventListener('click', function() {
+        console.log('🟣 Testing Master Ball with advanced effects');
+        const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        
+        // Usar el sistema avanzado de pokeball effects
+        if (window.pokemonFloaters && window.pokemonFloaters.createSimeydotmePokeballSequence) {
+          window.pokemonFloaters.createSimeydotmePokeballSequence('masterball', pos, () => {
+            console.log('✅ Master Ball test completed');
+          }, 'pikachu', false);
+        } else {
+          // Fallback al sistema básico
+          createMasterBallEffect(pos);
+        }
+      });
+
+      document.getElementById('testUltraBall')?.addEventListener('click', function() {
+        console.log('⚫ Testing Ultra Ball');
+        const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        
+        if (window.pokemonFloaters && window.pokemonFloaters.createSimeydotmePokeballSequence) {
+          window.pokemonFloaters.createSimeydotmePokeballSequence('ultraball', pos, () => {
+            console.log('✅ Ultra Ball test completed');
+          }, 'charizard', false);
+        } else {
+          // Fallback básico
+          const pokeball = createBasicPokeball('ultra', pos, 3);
+          animateFallWithFrames(pokeball, pos, 3, () => {
+            setTimeout(() => pokeball.remove(), 2000);
+          });
+        }
+      });
+
+      document.getElementById('testRandomBall')?.addEventListener('click', function() {
+        console.log('🎲 Testing Random Ball');
+        const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        
+        // Lista de pokeballs disponibles
+        const availableBalls = [
+          'pokeball', 'greatball', 'ultraball', 'masterball', 'premierball',
+          'quickball', 'timerball', 'duskball', 'netball', 'nestball'
+        ];
+        
+        const randomBall = availableBalls[Math.floor(Math.random() * availableBalls.length)];
+        const randomPokemon = ['pikachu', 'charizard', 'blastoise', 'venusaur', 'mew'][Math.floor(Math.random() * 5)];
+        const isShiny = Math.random() < 0.1; // 10% chance de shiny
+        
+        console.log(`🎲 Random: ${randomBall} catching ${randomPokemon}${isShiny ? ' (shiny)' : ''}`);
+        
+        if (window.pokemonFloaters && window.pokemonFloaters.createSimeydotmePokeballSequence) {
+          window.pokemonFloaters.createSimeydotmePokeballSequence(randomBall, pos, () => {
+            console.log(`✅ ${randomBall} test completed`);
+          }, randomPokemon, isShiny);
+        } else {
+          // Fallback básico
+          const randomIndex = Math.floor(Math.random() * pokeballs.length);
+          const pokeball = createBasicPokeball('random', pos, randomIndex);
+          animateFallWithFrames(pokeball, pos, randomIndex, () => {
+            if (randomIndex === 4) { // Master Ball
+              createMasterBallStars(pos);
+              createGoldenAura(pos);
+            }
+            setTimeout(() => pokeball.remove(), 2000);
+          });
+        }
+      });
+
+      // Función helper para crear pokeball básica - POSICIONAMIENTO CORREGIDO
+      function createBasicPokeball(type, pos, columnIndex) {
+        const pokeball = document.createElement('div');
+        pokeball.className = `${type} ball pokeball-sprite-animated`;
+        pokeball.style.cssText = `
+          position: fixed;
+          left: ${pos.x - 20.5}px;
+          top: ${pos.y - 200}px;
+          width: 41px;
+          height: 40px;
+          background-image: url('resources/sprites/pokeball-sprites-oficial.png');
+          background-size: 1106px 680px;
+          background-position: calc(41px * -${columnIndex}) 0px;
+          background-repeat: no-repeat;
+          z-index: 1000;
+          pointer-events: none;
+          image-rendering: pixelated;
+          image-rendering: -moz-crisp-edges;
+          image-rendering: crisp-edges;
+          transform-origin: center center;
+        `;
+        document.body.appendChild(pokeball);
+        return pokeball;
+      }
+    });
+    </script>
+
+    <!-- Master Ball Stars CSS Animation -->
+    <style>
+    @keyframes masterBallStar {
+      0% { 
+        transform: rotate(var(--star-angle)) translateX(0) rotate(calc(-1 * var(--star-angle)));
+        opacity: 1;
+        scale: 0;
+      }
+      50% { 
+        transform: rotate(var(--star-angle)) translateX(var(--star-distance)) rotate(calc(-1 * var(--star-angle)));
+        opacity: 1;
+        scale: 1.2;
+      }
+      100% { 
+        transform: rotate(var(--star-angle)) translateX(calc(var(--star-distance) * 1.5)) rotate(calc(-1 * var(--star-angle)));
+        opacity: 0;
+        scale: 0.5;
+      }
+    }
+
+    @keyframes goldenAuraPulse {
+      0% { 
+        transform: scale(0);
+        opacity: 1;
+      }
+      50% { 
+        transform: scale(1.2);
+        opacity: 0.8;
+      }
+      100% { 
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    @keyframes shinySparkle {
+      0% { 
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+      }
+      50% { 
+        transform: scale(1) rotate(180deg);
+        opacity: 1;
+      }
+      100% { 
+        transform: scale(0) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes flash-expand {
+      0% { 
+        transform: scale(0);
+        opacity: 1;
+      }
+      50% { 
+        transform: scale(1.2);
+        opacity: 0.8;
+      }
+      100% { 
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    /* ✨ ANIMACIONES AVANZADAS PARA EFECTOS SHINY PERSONALIZADOS */
+    @keyframes masterBallPulse {
+      0% { 
+        transform: scale(0);
+        opacity: 1;
+      }
+      30% { 
+        transform: scale(1.1);
+        opacity: 0.9;
+      }
+      60% { 
+        transform: scale(1.3);
+        opacity: 0.7;
+      }
+      100% { 
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+
+    @keyframes goldenStarBurst {
+      0% { 
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+      }
+      20% { 
+        transform: scale(1.2) rotate(72deg);
+        opacity: 1;
+      }
+      50% { 
+        transform: scale(1.5) rotate(180deg);
+        opacity: 0.8;
+      }
+      100% { 
+        transform: scale(0.3) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes purpleWave {
+      0% { 
+        transform: scale(0);
+        opacity: 0.8;
+      }
+      50% { 
+        transform: scale(1.5);
+        opacity: 0.4;
+      }
+      100% { 
+        transform: scale(3);
+        opacity: 0;
+      }
+    }
+
+    @keyframes sparklefall {
+      0% { 
+        transform: translateY(-20px) rotate(0deg);
+        opacity: 1;
+      }
+      50% { 
+        transform: translateY(50px) rotate(180deg);
+        opacity: 0.8;
+      }
+      100% { 
+        transform: translateY(120px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes shinyExplosion {
+      0% { 
+        transform: scale(0);
+        opacity: 1;
+      }
+      20% { 
+        transform: scale(0.5);
+        opacity: 0.9;
+      }
+      50% { 
+        transform: scale(1.2);
+        opacity: 0.7;
+      }
+      100% { 
+        transform: scale(3);
+        opacity: 0;
+      }
+    }
+
+         @keyframes shinyTextGlow {
+       0% { 
+         transform: translateX(-50%) scale(0);
+         opacity: 0;
+         background-position: 0% 50%;
+       }
+       25% { 
+         transform: translateX(-50%) scale(1.2);
+         opacity: 1;
+         background-position: 100% 50%;
+       }
+       50% { 
+         transform: translateX(-50%) scale(1);
+         opacity: 1;
+         background-position: 200% 50%;
+       }
+       75% { 
+         transform: translateX(-50%) scale(1);
+         opacity: 0.8;
+         background-position: 300% 50%;
+       }
+       100% { 
+         transform: translateX(-50%) scale(0.8);
+         opacity: 0;
+         background-position: 400% 50%;
+       }
+     }
+
+     /* 🎮 ANIMACIONES PARA POKÉMON Y EFECTOS */
+     @keyframes pokemonFloat {
+       0% { 
+         transform: translateY(0px);
+       }
+       50% { 
+         transform: translateY(-10px);
+       }
+       100% { 
+         transform: translateY(0px);
+       }
+     }
+
+     @keyframes shinyPulse {
+       0% { 
+         opacity: 1;
+         transform: scale(1);
+         text-shadow: 0 0 8px #FFD700, 0 0 12px #FF4444;
+       }
+       50% { 
+         opacity: 0.7;
+         transform: scale(1.1);
+         text-shadow: 0 0 15px #FFD700, 0 0 20px #FF4444, 0 0 25px #9932CC;
+       }
+       100% { 
+         opacity: 1;
+         transform: scale(1);
+         text-shadow: 0 0 8px #FFD700, 0 0 12px #FF4444;
+       }
+     }
+    </style>
+        <!-- Bootstrap + Icons + App Scripts -->
+
+  </body>
+</html>
