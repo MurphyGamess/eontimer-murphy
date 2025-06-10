@@ -154,12 +154,13 @@ Total Spawned: 47   // Total generado en sesión
 
 ## 🚀 **Instalación y Uso**
 
-### Requisitos Previos
+### 📦 **Requisitos Previos**
 - **Node.js** v16 o superior
 - **npm** v8 o superior  
 - **Git** para clonado
+- **Conexión a Internet** para descarga automática de Pokemon
 
-### Instalación
+### 🔧 **Instalación**
 ```bash
 # Clonar el repositorio
 git clone https://github.com/MurphyGamess/eontimer-murphy.git
@@ -174,6 +175,80 @@ npm start
 # Construir para distribución
 npm run build
 ```
+
+### 🎾 **Sistema de Descarga Automática de Pokemon**
+
+#### ✅ **Descarga Automática (Primera Ejecución)**
+Al ejecutar la aplicación por primera vez:
+1. **Detección automática**: Verifica si existen sprites de Pokemon localmente
+2. **Descarga masiva**: Si no existen, descarga automáticamente desde [Pokemon Showdown](https://play.pokemonshowdown.com/sprites/ani/)
+3. **UI de progreso**: Muestra barras de progreso para Pokemon normales y shiny
+4. **Verificación de integridad**: Reintenta automáticamente las descargas fallidas
+5. **Alerta de faltantes**: Si algunos Pokemon no se pueden descargar, muestra una burbuja roja
+
+#### 📂 **Estructura de Archivos Descargados**
+```
+resources/
+├── sprites/
+│   ├── ani/           # ~1000+ Pokemon normales (.gif)
+│   ├── ani-shiny/     # ~1000+ Pokemon shiny (.gif)
+│   └── pokeball-sprites-oficial.png
+├── config/
+│   └── settings.json  # Flag de descarga completada
+```
+
+#### 🚨 **Si Aparece la Burbuja de "Pokemon Faltantes"**
+1. **Click en la burbuja roja** para ver detalles de qué Pokemon faltan
+2. **Verificar conexión** a internet estable
+3. **Usar botón "Reintentar"** en el diálogo para reanudar descarga
+4. **Descarga manual** como último recurso (ver abajo)
+
+#### 📥 **Descarga Manual (Si es Necesario)**
+
+**Opción 1: Enlaces Directos**
+- **Pokemon Normales**: https://play.pokemonshowdown.com/sprites/ani/
+- **Pokemon Shiny**: https://play.pokemonshowdown.com/sprites/ani-shiny/
+
+**Opción 2: Script Manual desde Línea de Comandos**
+```bash
+# Descargar ambos tipos (normal + shiny)
+node scripts/download-pokemon.js
+
+# Solo Pokemon normales
+node scripts/download-pokemon.js --normal-only
+
+# Solo Pokemon shiny
+node scripts/download-pokemon.js --shiny-only
+
+# Forzar re-descarga con detalles
+node scripts/download-pokemon.js --force --verbose
+
+# Ver ayuda completa
+node scripts/download-pokemon.js --help
+```
+
+**Opción 3: Reiniciar Sistema Automático**
+```bash
+# Eliminar flag de descarga completada
+rm -rf config/settings.json
+
+# Reiniciar aplicación - activará descarga automática
+npm start
+```
+
+**Opción 4: Verificar Descargas Existentes**
+```bash
+# Verificar cuántos archivos hay descargados
+ls resources/sprites/ani/ | wc -l      # Debería ser ~1000+
+ls resources/sprites/ani-shiny/ | wc -l # Debería ser ~1000+
+```
+
+#### ⚡ **Características del Sistema**
+- ✅ **Descarga concurrente**: 3 Pokemon simultáneamente (optimal performance)
+- ✅ **Reintentos automáticos**: 3 intentos por Pokemon fallido
+- ✅ **Pausa inteligente**: 800ms entre grupos para no sobrecargar servidor
+- ✅ **Verificación de integridad**: Detecta archivos corruptos o faltantes
+- ✅ **UI no bloqueante**: Puedes usar la aplicación durante la descarga
 
 ### Uso del Sistema Pokemon
 1. **Abrir aplicación** y ir al modal de configuración (⚙️)
@@ -427,7 +502,7 @@ const mainWindow = new BrowserWindow({
 
 ## 🎯 **Casos de Uso v2.0**
 
-### 🏃‍♂️ **Speedrunning Profesional** 
+### 🏃‍♂️ **Speedrunning Profesional**
 - **Pantalla Completa**: Máxima inmersión sin distracciones
 - **Sistema Pause**: Pausar Pokemon durante runs importantes
 - **Timers Precisos**: Milisegundos exactos para splits
@@ -521,7 +596,7 @@ console.log('📊 Stats updated: Active/Shiny/Legendary counts');
 **MURPHY** - Creador y desarrollador principal del EonTimer v2.0
 
 ### Créditos v2.0
-- **Simeydotme** - Spritesheet oficial de pokébolas 
+- **Simeydotme** - Spritesheet oficial de pokébolas
 - **Pokemon Community** - Sprites GIF de 150+ especies
 - **Bootstrap Team** - Framework CSS e iconografía
 - **Electron Team** - Aplicación de escritorio

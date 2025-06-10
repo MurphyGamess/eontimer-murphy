@@ -6,7 +6,10 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
-    "dist": "electron-builder --publish=never"
+    "dist": "electron-builder --publish=never",
+    "download-pokemon": "node scripts/download-pokemon.js",
+    "download-pokemon-normal": "node scripts/download-pokemon.js --normal-only",
+    "download-pokemon-shiny": "node scripts/download-pokemon.js --shiny-only"
   },
   "build": {
     "appId": "com.murphygames.timer",
